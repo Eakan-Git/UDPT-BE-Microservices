@@ -1,0 +1,14 @@
+fastapi
+uvicorn
+pydantic
+odmantic
+motor
+pyjwt
+python-jose
+python-dotenv
+mangum
+passlib
+redis
+python-multipart
+bcrypt
+pika
