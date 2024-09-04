@@ -20,6 +20,7 @@ class PatchUserRpcClient:
         await self.callback_queue.consume(self.on_response)
 
     async def call(self, data):
+        print("calling patch user service")
         self.response = None
         self.corr_id = str(uuid.uuid4())
         await self.channel.default_exchange.publish(
@@ -28,7 +29,7 @@ class PatchUserRpcClient:
                 correlation_id=self.corr_id,
                 reply_to=self.callback_queue.name,
             ),
-            routing_key='patch_user_service'
+            routing_key='patching_user_service'
         )
         while self.response is None:
             await asyncio.sleep(0.1)

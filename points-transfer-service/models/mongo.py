@@ -15,4 +15,4 @@ if not all([db_user, db_password, db_host]):
 MONGO_URI = f"mongodb+srv://{db_user}:{db_password}@{db_host}/"
 DB_NAME = os.getenv("DB_NAME")
 client = AsyncIOMotorClient(MONGO_URI)
-engine = AIOEngine(client=client, database="UDPT")
+engine = AIOEngine(client=client, database=DB_NAME)

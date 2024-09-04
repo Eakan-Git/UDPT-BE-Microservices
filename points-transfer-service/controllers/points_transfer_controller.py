@@ -15,14 +15,14 @@ async def create_points_transfer(points_transfer_data: dict) -> Points_Transfer:
 
     try:
         # Fetching requesting user
-        requesting_user_query_response = await fetch_user_data(get_user_rpc_client, from_user_id)
+        requesting_user_query_response = await get_user_rpc_client.call(json.dumps({"user_id": from_user_id}))
         if "error" in requesting_user_query_response:
             return {"error": "Request user not found"}
 
         requesting_user = json.loads(requesting_user_query_response)
 
         # Fetching receiving user
-        receiving_user_query_response = await fetch_user_data(get_user_rpc_client, to_user_id)
+        receiving_user_query_response = await get_user_rpc_client.call(json.dumps({"user_id": to_user_id}))
         if "error" in receiving_user_query_response:
             return {"error": "Receive user not found"}
 
@@ -41,7 +41,6 @@ async def create_points_transfer(points_transfer_data: dict) -> Points_Transfer:
     # Create Points Transfer
     points_transfer_id = await get_next_points_transfer_id()
     points_transfer_data["id"] = points_transfer_id
-    print(points_transfer_data)
     points_transfer = Points_Transfer(**points_transfer_data)
 
     patch_user_rpc_client = PatchUserRpcClient()
@@ -51,20 +50,21 @@ async def create_points_transfer(points_transfer_data: dict) -> Points_Transfer:
         # Update users' bonus points
         patch_sent_user_data = {
             "user_id": requesting_user["id"],
-            "data": {
+            "patch_data": {
                 "bonus_point": new_requesting_user_bonus_points
             }
         }
         patch_received_user_data = {
             "user_id": receiving_user["id"],
-            "data": {
+            "patch_data": {
                 "bonus_point": new_receiving_user_bonus_points
             }
         }
+
         await asyncio.gather(
             engine.save(points_transfer),
-            patch_user_rpc_client.call(patch_sent_user_data),
-            patch_user_rpc_client.call(patch_received_user_data),
+            patch_user_rpc_client.call(json.dumps(dict(patch_sent_user_data))),
+            patch_user_rpc_client.call(json.dumps(dict(patch_received_user_data))),
         )
     except Exception as e:
         print(f"Error updating user points: {e}")
@@ -73,11 +73,6 @@ async def create_points_transfer(points_transfer_data: dict) -> Points_Transfer:
         await patch_user_rpc_client.close()
 
     return points_transfer
-
-async def fetch_user_data(rpc_client, user_id):
-    user_query_data = json.dumps({"user_id": user_id})
-    response = await rpc_client.call(user_query_data)
-    return json.loads(response)
 
 async def get_next_points_transfer_id() -> int:
     last_points_transfer = await engine.find_one(Points_Transfer, sort=Points_Transfer.id.desc())

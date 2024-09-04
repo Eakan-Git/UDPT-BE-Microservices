@@ -38,6 +38,11 @@ async def create_points_transfer_endpoint(points_transfer: Points_TransferCreate
 
     try:
         new_points_transfer = await create_points_transfer(points_transfer_data)
+        try:
+            if new_points_transfer.get("error"):
+                raise HTTPException(status_code=400, detail=new_points_transfer.get("error"))
+        except:
+            pass
         return new_points_transfer
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
