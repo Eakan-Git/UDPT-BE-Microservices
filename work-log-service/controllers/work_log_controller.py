@@ -1,9 +1,10 @@
 from fastapi import HTTPException
 from models.mongo import engine
 from models.work_log import WorkLog
-from controllers.user_controller import get_user_by_id, sudo_get_user_by_id
 from datetime import datetime
-from helper.time_helper import get_end_of_today, get_start_of_today, is_same_day
+from helper.time_helper import is_same_day
+from rabbitmq.get_user_rpc_client import GetUserRpcClient
+import json
 
 async def create_work_log(provided_user_id: int) -> WorkLog:
     
@@ -64,12 +65,15 @@ async def get_next_work_log_id() -> int:
     return work_log.id + 1 if work_log else 1
 
 async def get_my_work_logs(user_id: int, start_date: datetime, end_date: datetime) -> list:
-    user = await sudo_get_user_by_id(user_id)
-
-    if not user:
+    get_user_rpc_client = GetUserRpcClient()
+    await get_user_rpc_client.setup()
+    data = json.dumps({"user_id": user_id})
+    response = await get_user_rpc_client.call(data)
+    response = json.loads(response)
+    if response.get("error"):
         raise HTTPException(status_code=404, detail="User not found")
     
-    work_logs = await engine.find(WorkLog, (WorkLog.user_id == user.id) & (WorkLog.created_at >= start_date) & (WorkLog.created_at <= end_date), sort=WorkLog.id.desc())
+    work_logs = await engine.find(WorkLog, (WorkLog.user_id == user_id) & (WorkLog.created_at >= start_date) & (WorkLog.created_at <= end_date), sort=WorkLog.id.desc())
     return work_logs
 
 async def get_work_log_by_id(work_log_id: int) -> WorkLog:
@@ -84,12 +88,15 @@ async def get_work_log_by_id(work_log_id: int) -> WorkLog:
     return work_log
 
 async def get_work_logs_by_user_id_and_date_range(user_id: int, start_date: datetime, end_date: datetime) -> list:
-    user = await sudo_get_user_by_id(user_id)
-
-    if not user:
+    get_user_rpc_client = GetUserRpcClient()
+    await get_user_rpc_client.setup()
+    data = json.dumps({"user_id": user_id})
+    response = await get_user_rpc_client.call(data)
+    response = json.loads(response)
+    if response.get("error"):
         raise HTTPException(status_code=404, detail="User not found")
     
-    work_logs = await engine.find(WorkLog, (WorkLog.user_id == user.id) & (WorkLog.created_at >= start_date) & (WorkLog.created_at <= end_date))
+    work_logs = await engine.find(WorkLog, (WorkLog.user_id == user_id) & (WorkLog.created_at >= start_date) & (WorkLog.created_at <= end_date))
     return work_logs
 
 async def update_work_log_note(work_log_id: int, note: str, current_user_id: int) -> WorkLog:

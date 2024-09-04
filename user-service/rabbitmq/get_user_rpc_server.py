@@ -2,11 +2,11 @@ import aio_pika
 import os
 import json
 import asyncio
-from controllers.user_controller import authenticate_user
+from controllers.user_controller import get_user_by_id
 
-RABBITMQ_QUEUE = "user_auth_service"
+RABBITMQ_QUEUE = "get_user_by_id_service"
 
-class RPCServer:
+class GetUserRPCServer:
     def __init__(self):
         self.rabbitmq_url = os.getenv("RABBITMQ_URL")
         self.connection = None
@@ -20,16 +20,16 @@ class RPCServer:
         await self.queue.consume(self.on_request)
 
     async def on_request(self, message: aio_pika.IncomingMessage):
+        print("Received a request to get user by id")
         data = json.loads(message.body)
-        response = await authenticate_user(data["username"], data["password"])
-        if response is False:
-            response = {"error": "Invalid username or password"}
-        else:
+        user_id = data.get("user_id")
+        if not isinstance(user_id, int) or user_id < 1:
             response = {
-                "username": response.username,
-                "user_id": response.id,
-                "role": response.role
+                "error": "Invalid user id"
             }
+        else:
+            response = await get_user_by_id(user_id)
+            response = json.loads(response.json())
         await self.channel.default_exchange.publish(
             aio_pika.Message(
                 body=json.dumps(response).encode(),
@@ -41,7 +41,7 @@ class RPCServer:
 
     async def start(self):
         await self.setup()
-        print("RPC Server started.")
+        print("Get user RPC Server started.")
         await asyncio.Event().wait()  # Keeps the server running
 
     async def stop(self):

@@ -6,7 +6,8 @@ from fastapi.middleware.cors import CORSMiddleware
 import uvicorn
 import os
 from dotenv import load_dotenv
-from rabbitmq.rpc_server import RPCServer
+from rabbitmq.auth_rpc_server import AuthRPCServer
+from rabbitmq.get_user_rpc_server import GetUserRPCServer
 
 from middleware.auth_middleware import VerifyTokenMiddleware
 from views.v1.user_view import router as user_router
@@ -64,10 +65,14 @@ app.include_router(user_router, prefix="/api/v1", tags=["User v1"])
 handler = Mangum(app, lifespan="off")
 
 async def start_rpc_server():
-    server = RPCServer()
-    await server.setup()
-    asyncio.create_task(server.start())
-    return server
+    auth_server = AuthRPCServer()
+    await auth_server.setup()
+    asyncio.create_task(auth_server.start())
+
+    get_user_server = GetUserRPCServer()
+    await get_user_server.setup()
+    asyncio.create_task(get_user_server.start())
+    return auth_server, get_user_server
 
 @app.on_event("startup")
 async def startup_event():

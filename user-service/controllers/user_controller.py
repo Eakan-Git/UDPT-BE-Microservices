@@ -57,8 +57,6 @@ async def get_next_user_id() -> int:
     return last_user.id + 1 if last_user else 1
 
 async def get_user_by_id(user_id: int) -> User:
-    if not isinstance(user_id, int) or user_id < 1:
-        raise HTTPException(status_code=400, detail="Invalid user id")
     user = await engine.find_one(User, User.id == user_id, {"is_locked": False})
     return user
 
