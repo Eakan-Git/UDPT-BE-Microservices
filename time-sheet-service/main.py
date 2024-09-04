@@ -8,7 +8,7 @@ from dotenv import load_dotenv
 
 from middleware.auth_middleware import VerifyTokenMiddleware
 
-from views.v1.auth_view import router as auth_router
+from views.v1.time_sheet_view import router as time_sheet_router
 
 load_dotenv()
 
@@ -42,7 +42,7 @@ html = f"""
 </html>
 """
 
-app.title = "Auth service for UDPT project"
+app.title = "Timesheet service for UDPT project"
 app.description = "API for UDPT project"
 app.version = "0.1.0"
 
@@ -58,7 +58,7 @@ async def health():
 async def options_handler(path: str):
     return Response(status_code=200)
 
-app.include_router(auth_router, prefix="/api/v1", tags=["Auth v1"])
+app.include_router(time_sheet_router, prefix="/api/v1", tags=["Timesheet v1"])
 
 handler = Mangum(app, lifespan="off")
 

@@ -13,6 +13,6 @@ if not all([db_user, db_password, db_host]):
     raise ValueError("Environment variables DB_USER, DB_PASSWORD, and DB_HOST must be set.")
 
 MONGO_URI = f"mongodb+srv://{db_user}:{db_password}@{db_host}/"
-
+DB_NAME = os.getenv("DB_NAME")
 client = AsyncIOMotorClient(MONGO_URI)
-engine = AIOEngine(client=client, database="UDPT")
+engine = AIOEngine(client=client, database=DB_NAME)
