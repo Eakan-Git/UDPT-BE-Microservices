@@ -8,7 +8,7 @@ import os
 from dotenv import load_dotenv
 from rabbitmq.auth_rpc_server import AuthRPCServer
 from rabbitmq.get_user_rpc_server import GetUserRPCServer
-
+from rabbitmq.patch_user_rpc_server import PatchUserRPCServer
 from middleware.auth_middleware import VerifyTokenMiddleware
 from views.v1.user_view import router as user_router
 
@@ -72,7 +72,12 @@ async def start_rpc_server():
     get_user_server = GetUserRPCServer()
     await get_user_server.setup()
     asyncio.create_task(get_user_server.start())
-    return auth_server, get_user_server
+
+    patch_user_server = PatchUserRPCServer()
+    await patch_user_server.setup()
+    asyncio.create_task(patch_user_server.start())
+
+    return auth_server, get_user_server, patch_user_server
 
 @app.on_event("startup")
 async def startup_event():

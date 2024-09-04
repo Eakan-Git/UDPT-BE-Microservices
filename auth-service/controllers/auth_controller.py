@@ -24,7 +24,12 @@ async def authenticate_user(username: str, password: str):
     auth_rpc = AuthRpcClient()
     await auth_rpc.setup()
     data = json.dumps({"username": username, "password": password})
-    response = await auth_rpc.call(data)
+    try:
+        response = await auth_rpc.call(data)
+    except Exception as e:
+        pass
+    finally:
+        await auth_rpc.close()
     return response
 
 def create_access_token(data: TokenData, expires_delta: timedelta = None):

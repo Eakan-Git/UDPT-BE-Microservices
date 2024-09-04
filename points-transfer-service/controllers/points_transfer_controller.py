@@ -2,22 +2,54 @@ from fastapi import HTTPException
 import asyncio
 from models.mongo import engine
 from models.points_transfer import Points_Transfer
-from controllers.user_controller import get_user_by_id, update_user
+from rabbitmq.get_user_rpc_client import GetUserRpcClient
+from rabbitmq.patch_user_rpc_client import PatchUserRpcClient
+import json
 
 async def create_points_transfer(points_transfer_data: dict) -> Points_Transfer:
-    requesting_user = await get_user_by_id(points_transfer_data["from_user_id"])
-    receiving_user = await get_user_by_id(points_transfer_data["to_user_id"])
-    if not requesting_user or not receiving_user:
-        raise HTTPException(status_code=404, detail="User not found")
+    from_user_id = points_transfer_data["from_user_id"]
+    to_user_id = points_transfer_data["to_user_id"]
+
+    get_user_rpc_client = GetUserRpcClient()
+    await get_user_rpc_client.setup()
+
+    data = json.dumps({"user_id": from_user_id})
+    response = await get_user_rpc_client.call(data)
+    response = json.loads(response)
+
+    if response.get("error"):
+        return {"error": "Request user not found"}
+    requesting_user = response
+
+    data = json.dumps({"user_id": to_user_id})
+    response = await get_user_rpc_client.call(data)
+    response = json.loads(response)
+
+    if response.get("error"):
+        return {"error": "Receive user not found"}
+    receiving_user = json.loads(response)
+    
+    # requesting_user = await get_user_by_id(points_transfer_data["from_user_id"])
+    # receiving_user = await get_user_by_id(points_transfer_data["to_user_id"])
+    # if not requesting_user or not receiving_user:
+    #     raise HTTPException(status_code=404, detail="User not found")
     new_requesting_user_bonus_points = requesting_user.bonus_point - points_transfer_data["points"]
     new_receiving_user_bonus_points = receiving_user.bonus_point + points_transfer_data["points"]
     points_transfer_id = await get_next_points_transfer_id()
     points_transfer_data["id"] = points_transfer_id
     points_transfer = Points_Transfer(**points_transfer_data)
+    print(points_transfer)
+    print("before save")
+    patch_user_rpc_client = PatchUserRpcClient()
+    await patch_user_rpc_client.setup()
+
+    request_data = json.dumps({"bonus_point": new_requesting_user_bonus_points})
+    receive_data = json.dumps({"bonus_point": new_receiving_user_bonus_points})
+
     await asyncio.gather(
         engine.save(points_transfer),
-        update_user(requesting_user.id, {"bonus_point": new_requesting_user_bonus_points}),
-        update_user(receiving_user.id, {"bonus_point": new_receiving_user_bonus_points}),
+        patch_user_rpc_client.call(requesting_user.id, request_data),
+        patch_user_rpc_client.call(receiving_user.id, receive_data)
     )
     return points_transfer
 

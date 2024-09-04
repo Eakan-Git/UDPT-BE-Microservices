@@ -2,11 +2,11 @@ import aio_pika
 import os
 import json
 import asyncio
-from controllers.user_controller import get_user_by_id
+from controllers.user_controller import update_user
 
-RABBITMQ_QUEUE = "get_user_by_id_service"
+RABBITMQ_QUEUE = "patching_user_service"
 
-class GetUserRPCServer:
+class PatchUserRPCServer:
     def __init__(self):
         self.rabbitmq_url = os.getenv("RABBITMQ_URL")
         self.connection = None
@@ -20,21 +20,24 @@ class GetUserRPCServer:
         await self.queue.consume(self.on_request)
 
     async def on_request(self, message: aio_pika.IncomingMessage):
-        print("Received a request to get user by id")
-        data = json.loads(message.body)
-        user_id = data.get("user_id")
+        print("Received a request to patch user")
+        msg = json.loads(message.body)
+        user_id = msg.get("user_id")
+        patch_data = msg.get("patch_data")
         if not isinstance(user_id, int) or user_id < 1:
             response = {
                 "error": "Invalid user id"
             }
         else:
-            response = await get_user_by_id(user_id)
+            response = await update_user(user_id, patch_data)
             if response is None:
                 response = {
                     "error": "User not found"
                 }
             else:
-                response = json.loads(response.json())
+                response = {
+                    "message": "User updated successfully"
+                }
         await self.channel.default_exchange.publish(
             aio_pika.Message(
                 body=json.dumps(response).encode(),
@@ -46,7 +49,7 @@ class GetUserRPCServer:
 
     async def start(self):
         await self.setup()
-        print("Get user RPC Server started.")
+        print("Patching user RPC Server started.")
         await asyncio.Event().wait()  # Keeps the server running
 
     async def stop(self):

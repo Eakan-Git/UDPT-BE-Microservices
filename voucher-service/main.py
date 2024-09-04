@@ -4,7 +4,9 @@ from fastapi.responses import HTMLResponse
 from fastapi.middleware.cors import CORSMiddleware
 import uvicorn
 import os
+import asyncio
 from dotenv import load_dotenv
+from rabbitmq.get_voucher_rpc_server import GetVoucherRPCServer
 
 from middleware.auth_middleware import VerifyTokenMiddleware
 
@@ -61,6 +63,16 @@ async def options_handler(path: str):
 app.include_router(voucher_router, prefix="/api/v1", tags=["Voucher v1"])
 
 handler = Mangum(app, lifespan="off")
+
+async def start_rpc_server():
+    get_voucher_rpc_server = GetVoucherRPCServer()
+    await get_voucher_rpc_server.setup()
+    asyncio.create_task(get_voucher_rpc_server.start())
+    return get_voucher_rpc_server
+
+@app.on_event("startup")
+async def startup_event():
+    await start_rpc_server()
 
 if __name__ == "__main__":
     host = os.getenv("APP_HOST")

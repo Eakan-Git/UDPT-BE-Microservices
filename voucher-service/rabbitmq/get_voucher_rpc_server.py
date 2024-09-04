@@ -2,11 +2,11 @@ import aio_pika
 import os
 import json
 import asyncio
-from controllers.user_controller import get_user_by_id
+from controllers.voucher_controller import get_voucher
 
-RABBITMQ_QUEUE = "get_user_by_id_service"
+RABBITMQ_QUEUE = "get_voucher_service"
 
-class GetUserRPCServer:
+class GetVoucherRPCServer:
     def __init__(self):
         self.rabbitmq_url = os.getenv("RABBITMQ_URL")
         self.connection = None
@@ -20,18 +20,18 @@ class GetUserRPCServer:
         await self.queue.consume(self.on_request)
 
     async def on_request(self, message: aio_pika.IncomingMessage):
-        print("Received a request to get user by id")
+        print("Received a request to get voucher")
         data = json.loads(message.body)
-        user_id = data.get("user_id")
-        if not isinstance(user_id, int) or user_id < 1:
+        voucher_id = data.get("voucher_id")
+        if not isinstance(voucher_id, int) or voucher_id < 1:
             response = {
-                "error": "Invalid user id"
+                "error": "Invalid voucher_id"
             }
         else:
-            response = await get_user_by_id(user_id)
+            response = await get_voucher(voucher_id)
             if response is None:
                 response = {
-                    "error": "User not found"
+                    "error": "Voucher not found"
                 }
             else:
                 response = json.loads(response.json())
@@ -46,7 +46,7 @@ class GetUserRPCServer:
 
     async def start(self):
         await self.setup()
-        print("Get user RPC Server started.")
+        print("Get voucher RPC Server started.")
         await asyncio.Event().wait()  # Keeps the server running
 
     async def stop(self):

@@ -68,7 +68,12 @@ async def get_my_work_logs(user_id: int, start_date: datetime, end_date: datetim
     get_user_rpc_client = GetUserRpcClient()
     await get_user_rpc_client.setup()
     data = json.dumps({"user_id": user_id})
-    response = await get_user_rpc_client.call(data)
+    try:
+        response = await get_user_rpc_client.call(data)
+    except Exception as e:
+        pass
+    finally:
+        await get_user_rpc_client.close()
     response = json.loads(response)
     if response.get("error"):
         raise HTTPException(status_code=404, detail="User not found")
@@ -91,7 +96,12 @@ async def get_work_logs_by_user_id_and_date_range(user_id: int, start_date: date
     get_user_rpc_client = GetUserRpcClient()
     await get_user_rpc_client.setup()
     data = json.dumps({"user_id": user_id})
-    response = await get_user_rpc_client.call(data)
+    try:
+        response = await get_user_rpc_client.call(data)
+    except Exception as e:
+        pass
+    finally:
+        get_user_rpc_client.close()
     response = json.loads(response)
     if response.get("error"):
         raise HTTPException(status_code=404, detail="User not found")

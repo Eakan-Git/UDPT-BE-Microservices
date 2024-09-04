@@ -1,31 +1,71 @@
 from fastapi import HTTPException
 from models.mongo import engine
 from models.voucher_exchange import Voucher_Exchange
-from controllers.voucher_controller import get_voucher
 from datetime import datetime
-from controllers.user_controller import get_user_by_id
+from rabbitmq.get_user_rpc_client import GetUserRpcClient
+from rabbitmq.get_voucher_rpc_client import GetVoucherRpcClient
+from rabbitmq.patch_user_rpc_client import PatchUserRpcClient
+import json
 
-async def create_voucher_exchange(voucher_exchange_data: dict) -> Voucher_Exchange:
-    requesting_voucher = await get_voucher(voucher_exchange_data.get("voucher_id"))
-    requesting_user = await get_user_by_id(voucher_exchange_data.get("user_id"))
+async def create_voucher_exchange(voucher_exchange_data: dict) -> Voucher_Exchange:    
+    get_voucher_rpc_client = GetVoucherRpcClient()
+    await get_voucher_rpc_client.setup()
+    data = json.dumps({"voucher_id": voucher_exchange_data.get("voucher_id")})
+    try:
+        response = await get_voucher_rpc_client.call(data)
+    except Exception as e:
+        pass
+    finally:
+        await get_voucher_rpc_client.close()
+    requesting_voucher = json.loads(response)
 
-    if not requesting_voucher:
-        raise HTTPException(status_code=404, detail="Voucher not found")
+    get_user_rpc_client = GetUserRpcClient()
+    await get_user_rpc_client.setup()
+
+    data = json.dumps({"user_id": voucher_exchange_data.get("user_id")})
+    try:
+        response = await get_user_rpc_client.call(data)
+    except Exception as e:
+        pass
+    finally:
+        await get_user_rpc_client.close()
+    requesting_user = json.loads(response)
+
+    if requesting_voucher.get("error"):
+        return {"error": "Voucher not found"}
+    if not requesting_user:
+        return {"error": "User not found"}
     
-    if requesting_voucher.require_point > requesting_user.bonus_point:
+    if requesting_voucher.get("require_point") > requesting_user.get("bonus_point"):
         raise HTTPException(status_code=400, detail="Not enough point to exchange this voucher")
 
     next_voucher_exchange_id = await get_next_voucher_exchange_id()
     voucher_exchange_data["id"] = next_voucher_exchange_id
-    voucher_exchange_data["voucher_title"] = requesting_voucher.title
-    voucher_exchange_data["voucher_description"] = requesting_voucher.description
-    voucher_exchange_data["point_used"] = requesting_voucher.require_point
+    voucher_exchange_data["voucher_title"] = requesting_voucher.get("title")
+    voucher_exchange_data["voucher_description"] = requesting_voucher.get("description")
+    voucher_exchange_data["point_used"] = requesting_voucher.get("require_point")
 
-    requesting_user.bonus_point -= requesting_voucher.require_point
+    requesting_user["bonus_point"] -= requesting_voucher["require_point"]
 
     voucher_exchange = Voucher_Exchange(**voucher_exchange_data)
     await engine.save(voucher_exchange)
-    await engine.save(requesting_user)
+    patch_user_rpc_client = PatchUserRpcClient()
+    await patch_user_rpc_client.setup()
+
+    requesting_user_id = requesting_user.get("id")
+    requesting_user_bonus_point = requesting_user.get("bonus_point")
+    patch_data = {
+        "user_id": requesting_user_id,
+        "patch_data": {
+            "bonus_point": requesting_user_bonus_point
+        }
+    }
+    try:
+        await patch_user_rpc_client.call(json.dumps(patch_data))
+    except Exception as e:
+        print(e)
+    finally:
+        await patch_user_rpc_client.close()
     return voucher_exchange
 
 async def get_voucher_exchange(voucher_exchange_id: int) -> Voucher_Exchange:
