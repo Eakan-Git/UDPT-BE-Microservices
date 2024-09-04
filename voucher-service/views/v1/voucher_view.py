@@ -1,13 +1,12 @@
-from fastapi import APIRouter, HTTPException
-from controllers.user_controller import user_dependency
+from fastapi import APIRouter, HTTPException, Request
 from schemas.voucher_schema import VoucherCreate, VoucherRead, VoucherUpdate
 from controllers.voucher_controller import create_voucher, get_voucher, get_vouchers, update_voucher
 from enums import Role
 router = APIRouter()
 
 @router.post("/vouchers/", response_model=VoucherRead)
-async def create_voucher_endpoint(voucher: VoucherCreate, current_user: user_dependency):
-    if not Role.is_granted(current_user.role):
+async def create_voucher_endpoint(voucher: VoucherCreate, request: Request):
+    if not Role.is_granted(request.state.user.get("role")):
         raise HTTPException(status_code=403, detail="Permission denied")
     voucher_data = voucher.dict()
     try:
@@ -17,20 +16,20 @@ async def create_voucher_endpoint(voucher: VoucherCreate, current_user: user_dep
         raise HTTPException(status_code=500, detail=str(e))
     
 @router.get("/vouchers/", response_model=dict)
-async def get_vouchers_endpoint(current_user: user_dependency, page: int = 1, limit: int = 10):
+async def get_vouchers_endpoint(page: int = 1, limit: int = 10):
     vouchers = await get_vouchers(page, limit)
     return vouchers
 
 @router.get("/vouchers/{voucher_id}", response_model=VoucherRead)
-async def get_voucher_by_id_endpoint(voucher_id: int, current_user: user_dependency):
+async def get_voucher_by_id_endpoint(voucher_id: int):
     voucher = await get_voucher(voucher_id)
     if voucher is None:
         raise HTTPException(status_code=404, detail="Voucher not found")
     return voucher
 
 @router.patch("/vouchers/{voucher_id}", response_model=VoucherRead)
-async def update_voucher_endpoint(voucher_id: int, voucher: VoucherUpdate, current_user: user_dependency):
-    if not Role.is_granted(current_user.role):
+async def update_voucher_endpoint(voucher_id: int, voucher: VoucherUpdate, request: Request):
+    if not Role.is_granted(request.state.user.get("role")):
         raise HTTPException(status_code=403, detail="Permission denied")
     voucher_data = voucher.dict()
     updated_voucher = await update_voucher(voucher_id, voucher_data)

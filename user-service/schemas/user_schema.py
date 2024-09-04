@@ -40,3 +40,7 @@ class UserUpdate(BaseModel):
 class UserChangePassword(BaseModel):
     old_password: str = Field(..., description="Old password of the user")
     new_password: str = Field(..., description="New password of the user")
+
+class VerifyPassword(BaseModel):
+    username: str = Field(..., description="Username of the user")
+    password: str = Field(..., description="Password of the user")

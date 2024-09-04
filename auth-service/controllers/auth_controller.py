@@ -3,10 +3,9 @@ from jose import JWTError, jwt
 from passlib.context import CryptContext
 from fastapi import HTTPException
 import os
-from models.mongo import engine
-import models.user as User
 from schemas.auth_schema import TokenData
-
+import json
+from rabbitmq.rpc_client import AuthRpcClient
 from config import SECRET_KEY, ALGORITHM, ACCESS_TOKEN_EXPIRE_MINUTES
 
 USER_SERVICE_BASE_URL = os.getenv("USER_SERVICE_BASE_URL")
@@ -22,12 +21,11 @@ def get_password_hash(password):
     return pwd_context.hash(password)
 
 async def authenticate_user(username: str, password: str):
-    user = await engine.find_one(User.User, User.User.username == username)
-    if not user:
-        return False
-    if not verify_password(password, user.hashed_password):
-        return False
-    return user
+    auth_rpc = AuthRpcClient()
+    await auth_rpc.setup()
+    data = json.dumps({"username": username, "password": password})
+    response = await auth_rpc.call(data)
+    return response
 
 def create_access_token(data: TokenData, expires_delta: timedelta = None):
     to_encode = data.dict()

@@ -1,7 +1,6 @@
 from odmantic import Model, Field
 from typing import Optional
 from datetime import datetime
-from enums import ActivityType
 
 class Activity(Model):
     id: int = Field(primary_field=True)

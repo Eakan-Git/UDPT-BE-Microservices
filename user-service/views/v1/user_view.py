@@ -1,16 +1,12 @@
-from fastapi import APIRouter, HTTPException, Request
+from fastapi import APIRouter, HTTPException, Depends
+from fastapi.security import OAuth2PasswordRequestForm
 
-from schemas.user_schema import UserCreate, UserRead, UserUpdate, UserChangePassword
+from schemas.user_schema import UserCreate, UserRead, UserUpdate, UserChangePassword, VerifyPassword
 from controllers.user_controller import create_user, get_user_by_id, get_user_paginate, update_user, delete_user, change_password
 from controllers.user_controller import user_dependency, authenticate_user
 from enums import Role
 
 router = APIRouter()
-
-@router.get("/users/verify-password", response_model=UserRead)
-async def verify_password_endpoint(username: str, password: str):
-    user = await authenticate_user(username, password)
-    return user is not False
 
 @router.get("/users/me/", response_model=UserRead)
 def get_current_user(current_user: user_dependency):

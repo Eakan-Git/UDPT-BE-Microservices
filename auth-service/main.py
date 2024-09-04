@@ -5,6 +5,7 @@ from fastapi.middleware.cors import CORSMiddleware
 import uvicorn
 import os
 from dotenv import load_dotenv
+import asyncio
 
 from middleware.auth_middleware import VerifyTokenMiddleware
 
@@ -65,4 +66,4 @@ handler = Mangum(app, lifespan="off")
 if __name__ == "__main__":
     host = os.getenv("APP_HOST")
     port = int(os.getenv("APP_PORT"))
-    uvicorn.run("main:app", host=host, port=port, reload=True)
+    asyncio.run(uvicorn.run("main:app", host=host, port=port, reload=True))

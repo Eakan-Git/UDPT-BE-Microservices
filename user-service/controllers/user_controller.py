@@ -5,7 +5,6 @@ from models.mongo import engine
 from models.user import User
 from datetime import datetime
 from controllers.auth_controller import get_password_hash, verify_password
-from passlib.context import CryptContext
 
 from fastapi.security import OAuth2PasswordBearer
 
@@ -22,8 +21,7 @@ async def get_current_user(token: Annotated[str, Depends(oauth2_scheme)]):
     try:
         # Since the token is already passed through the middleware, we can decode it directly
         token_data = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
-        print(token_data)
-        username = token_data.user.username
+        username = token_data.get("username")
     except JWTError:
         raise credentials_exception
     
@@ -35,12 +33,7 @@ async def get_current_user(token: Annotated[str, Depends(oauth2_scheme)]):
 
 user_dependency = Annotated[dict, Depends(get_current_user)]
 
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
-
-def verify_password(plain_password, hashed_password):
-    return pwd_context.verify(plain_password, hashed_password)
-
-async def authenticate_user(username: str, password: str) -> User:
+async def authenticate_user(username: str, password: str):
     user = await sudo_get_user_by_username(username)
     if not user:
         return False
@@ -76,7 +69,6 @@ async def sudo_get_user_by_id(user_id: int) -> User:
     return user
 
 async def get_user_by_username(username: str) -> User:
-    print(username)
     if not isinstance(username, str) or not username:
         raise HTTPException(status_code=400, detail="Invalid username")
     user = await engine.find_one(User, User.username == username)

@@ -13,7 +13,6 @@ class VerifyTokenMiddleware(BaseHTTPMiddleware):
         "/docs",
         "/redoc",
         "/openapi.json",
-        "/api/v1/auth/login",
         "/favicon.ico",
     ]
 
@@ -31,7 +30,13 @@ class VerifyTokenMiddleware(BaseHTTPMiddleware):
         if token:
             try:
                 payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM]) 
-                request.state.user = payload
+                request_state_user = {
+                    "username": payload.get("username"),
+                    "user_id": payload.get("user_id"),
+                    "role": payload.get("role"),
+                }
+                request.state.user = request_state_user
+
             except jwt.JWTError:
                 print("JWT decoding error at middleware")
                 return JSONResponse(

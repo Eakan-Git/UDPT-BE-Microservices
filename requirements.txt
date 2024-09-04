@@ -11,4 +11,4 @@ passlib
 redis
 python-multipart
 bcrypt
-pika
+aio_pika
