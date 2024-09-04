@@ -1,10 +1,11 @@
 from fastapi import HTTPException
 from models.mongo import engine
 from models.ticket import Ticket
-from controllers.user_controller import get_user_by_id
+from rabbitmq.get_user_rpc_client import GetUserRpcClient
 from datetime import datetime
 from enums import TicketType, TicketStatus
 from typing import Optional
+import json
 
 async def get_ticket_by_id(ticket_id: int) -> Ticket:
     if not isinstance(ticket_id, int) or ticket_id < 1:
@@ -49,8 +50,13 @@ async def create_ticket(ticket_data: dict) -> Ticket:
     if not isinstance(given_user_id, int) or given_user_id < 1:
         raise HTTPException(status_code=400, detail="Invalid user id")
 
-    if not await get_user_by_id(given_user_id):
-        raise HTTPException(status_code=400, detail="User not found")
+    get_user_rpc_client = GetUserRpcClient()
+    await get_user_rpc_client.setup()
+    data = json.dumps({"user_id": given_user_id})
+    response = await get_user_rpc_client.call(data)
+    response = json.loads(response)
+    if response.get("error"):
+        raise HTTPException(status_code=404, detail="User not found")
     
     given_ticket_type = ticket_data.get("type").lower()
     
@@ -137,8 +143,8 @@ async def get_tickets_by_user_id(user_id: int, page: int, limit: int, ticket_typ
     
     return res
 
-async def update_ticket(ticket_id: int, ticket_data: dict) -> Ticket:
-    ticket = await engine.find_one(Ticket, Ticket.id == ticket_id)
+async def update_ticket(ticket_id: int, ticket_data: dict, current_user_id: int) -> Ticket:
+    ticket = await engine.find_one(Ticket, Ticket.id == ticket_id, Ticket.user_id == current_user_id)
     if ticket:
         for key, value in ticket_data.items():
             if hasattr(ticket, key) and value is not None:

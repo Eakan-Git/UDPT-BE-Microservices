@@ -2,7 +2,6 @@ from fastapi import Request
 from jose import jwt
 from starlette.middleware.base import BaseHTTPMiddleware
 from starlette.responses import JSONResponse
-from models.redis import get_redis_value
 
 from config import SECRET_KEY, ALGORITHM
 
@@ -10,10 +9,10 @@ class VerifyTokenMiddleware(BaseHTTPMiddleware):
     EXCLUDE_PATHS = [
         "",
         "/",
+        "/health",
         "/docs",
         "/redoc",
         "/openapi.json",
-        "/api/v1/login",
         "/favicon.ico",
     ]
 
@@ -30,21 +29,14 @@ class VerifyTokenMiddleware(BaseHTTPMiddleware):
         token = token.split("Bearer ")[-1] if token else None
         if token:
             try:
-                payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
-                username_from_given_token = payload.get("sub")
-                redis_username = get_redis_value(token)
-                if redis_username is None:
-                    return JSONResponse(
-                        status_code=401,
-                        content={"detail": "Token not found in redis"},
-                    )
-                if redis_username != username_from_given_token:
-                    return JSONResponse(
-                        status_code=401,
-                        content={"detail": "Token mismatch with redis"},
-                    )
-                
-                request.state.username = redis_username
+                payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM]) 
+                request_state_user = {
+                    "username": payload.get("username"),
+                    "user_id": payload.get("user_id"),
+                    "role": payload.get("role"),
+                }
+                request.state.user = request_state_user
+
             except jwt.JWTError:
                 print("JWT decoding error at middleware")
                 return JSONResponse(
