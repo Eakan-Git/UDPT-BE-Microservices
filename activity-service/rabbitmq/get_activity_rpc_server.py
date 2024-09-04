@@ -2,11 +2,11 @@ import aio_pika
 import os
 import json
 import asyncio
-from controllers.user_controller import get_user_by_id
+from controllers.activity_controller import get_activity_by_id
 
-RABBITMQ_QUEUE = "get_user_by_id_service"
+RABBITMQ_QUEUE = "get_activity_service"
 
-class GetUserRPCServer:
+class GetActivityRPCServer:
     def __init__(self):
         self.rabbitmq_url = os.getenv("RABBITMQ_URL")
         self.connection = None
@@ -20,22 +20,21 @@ class GetUserRPCServer:
         await self.queue.consume(self.on_request)
 
     async def on_request(self, message: aio_pika.IncomingMessage):
-        print("Received a request to get user by id")
+        print("Received a request to get activity by id")
         data = json.loads(message.body)
-        user_id = data.get("user_id")
-        if not isinstance(user_id, int) or user_id < 1:
+        activity_id = data.get("activity_id")
+        if not isinstance(activity_id, int) or activity_id < 1:
             response = {
-                "error": "Invalid user id"
+                "error": "Invalid activity id"
             }
         else:
-            response = await get_user_by_id(user_id)
+            response = await get_activity_by_id(activity_id)
             if response is None:
                 response = {
-                    "error": "User not found"
+                    "error": "Activity not found"
                 }
             else:
                 response = json.loads(response.json())
-                response.pop("hashed_password")
         await self.channel.default_exchange.publish(
             aio_pika.Message(
                 body=json.dumps(response).encode(),
@@ -47,7 +46,7 @@ class GetUserRPCServer:
 
     async def start(self):
         await self.setup()
-        print("Get user RPC Server started.")
+        print("Get activity RPC Server started.")
         await asyncio.Event().wait()  # Keeps the server running
 
     async def stop(self):

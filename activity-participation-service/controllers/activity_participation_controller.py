@@ -1,20 +1,30 @@
 from fastapi import HTTPException, status
 from models.mongo import engine
 from models.activity_participation import Activity_Participation
-from controllers.activity_controller import get_activity_by_id
 from helper import time_helper
+from rabbitmq.get_activity_rpc_client import GetActivityRpcClient
+import json
 
 async def create_activity_participation(activity_participation_data: dict) -> Activity_Participation:
-    activity_participation_id = await get_next_activity_participation_id()
-    activity_participation_data["id"] = activity_participation_id
-    requesting_activity = await get_activity_by_id(activity_participation_data.get("activity_id"))
-    if not requesting_activity:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Activity not found")
-    if not time_helper.is_greater_than(requesting_activity.to_date, time_helper.get_current_datetime()):
-        raise HTTPException(status_code=status.HTTP_410_GONE, detail="Activity is ended")
     participation_flag = await engine.find_one(Activity_Participation, Activity_Participation.user_id == activity_participation_data.get("user_id"), Activity_Participation.activity_id == activity_participation_data.get("activity_id"))
     if participation_flag:
-        raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail="You already participated in this activity")
+        return {"error": "User has already participated in this activity"}
+    
+    activity_participation_id = await get_next_activity_participation_id()
+    activity_participation_data["id"] = activity_participation_id
+    
+    get_activity_rpc_client = GetActivityRpcClient()
+    await get_activity_rpc_client.setup()
+    call_data = {
+        "activity_id": activity_participation_data.get("activity_id")
+    }
+    requesting_activity = await get_activity_rpc_client.call(json.dumps(call_data))
+    requesting_activity = json.loads(requesting_activity)
+    if requesting_activity.get("error"):
+        return {"error": "Activity not found"}
+    if not time_helper.is_greater_than(time_helper.convert_to_datetime(requesting_activity.get('to_date')), time_helper.get_current_datetime()):
+        return {"error": "Activity has ended"}
+    
     activity_participation = Activity_Participation(**activity_participation_data)
     await engine.save(activity_participation)
     return activity_participation

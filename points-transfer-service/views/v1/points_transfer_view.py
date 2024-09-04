@@ -7,7 +7,7 @@ import json
 
 router = APIRouter()
 
-@router.post("/points-transfers/", response_model=dict, description="Create a points transfer, only available for role: admin, manager")
+@router.post("/points-transfers/", response_model=Points_TransferRead, description="Create a points transfer, only available for role: admin, manager")
 async def create_points_transfer_endpoint(points_transfer: Points_TransferCreate, request: Request):
     if not Role.is_granted(request.state.user.get("role")):
         raise HTTPException(status_code=403, detail="Permission denied")
@@ -20,23 +20,24 @@ async def create_points_transfer_endpoint(points_transfer: Points_TransferCreate
 
     get_user_rpc_client = GetUserRpcClient()
     await get_user_rpc_client.setup()
-    data = json.dumps({"user_id": current_user_id})
-    response = await get_user_rpc_client.call(data)
-    response = json.loads(response)
-
-    if response.get("error"):
+    current_user_query_data = json.dumps({"user_id": current_user_id})
+    try:
+        current_user_query_response = await get_user_rpc_client.call(current_user_query_data)
+    except Exception as e:
+        print(str(e))
+    finally:
+        await get_user_rpc_client.close()
+    current_user = json.loads(current_user_query_response)
+    if current_user.get("error"):
         raise HTTPException(status_code=404, detail="User not found")
     
-    current_user_bonus_point = response.get("bonus_point")
+    current_user_bonus_point = current_user.get("bonus_point")
 
     if current_user_bonus_point < points_transfer_data["points"]:
         raise HTTPException(status_code=400, detail="Insufficient points")
 
     try:
         new_points_transfer = await create_points_transfer(points_transfer_data)
-        print(new_points_transfer)
-        if new_points_transfer.get("error"):
-            raise HTTPException(status_code=400, detail=new_points_transfer.get("error"))
         return new_points_transfer
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))

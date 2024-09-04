@@ -13,45 +13,71 @@ async def create_points_transfer(points_transfer_data: dict) -> Points_Transfer:
     get_user_rpc_client = GetUserRpcClient()
     await get_user_rpc_client.setup()
 
-    data = json.dumps({"user_id": from_user_id})
-    response = await get_user_rpc_client.call(data)
-    response = json.loads(response)
+    try:
+        # Fetching requesting user
+        requesting_user_query_response = await fetch_user_data(get_user_rpc_client, from_user_id)
+        if "error" in requesting_user_query_response:
+            return {"error": "Request user not found"}
 
-    if response.get("error"):
-        return {"error": "Request user not found"}
-    requesting_user = response
+        requesting_user = json.loads(requesting_user_query_response)
 
-    data = json.dumps({"user_id": to_user_id})
-    response = await get_user_rpc_client.call(data)
-    response = json.loads(response)
+        # Fetching receiving user
+        receiving_user_query_response = await fetch_user_data(get_user_rpc_client, to_user_id)
+        if "error" in receiving_user_query_response:
+            return {"error": "Receive user not found"}
 
-    if response.get("error"):
-        return {"error": "Receive user not found"}
-    receiving_user = json.loads(response)
-    
-    # requesting_user = await get_user_by_id(points_transfer_data["from_user_id"])
-    # receiving_user = await get_user_by_id(points_transfer_data["to_user_id"])
-    # if not requesting_user or not receiving_user:
-    #     raise HTTPException(status_code=404, detail="User not found")
-    new_requesting_user_bonus_points = requesting_user.bonus_point - points_transfer_data["points"]
-    new_receiving_user_bonus_points = receiving_user.bonus_point + points_transfer_data["points"]
+        receiving_user = json.loads(receiving_user_query_response)
+
+    except Exception as e:
+        print(f"Error fetching user data: {e}")
+        return {"error": "Failed to retrieve user data"}
+    finally:
+        await get_user_rpc_client.close()
+
+    # Calculate new bonus points
+    new_requesting_user_bonus_points = requesting_user["bonus_point"] - points_transfer_data["points"]
+    new_receiving_user_bonus_points = receiving_user["bonus_point"] + points_transfer_data["points"]
+
+    # Create Points Transfer
     points_transfer_id = await get_next_points_transfer_id()
     points_transfer_data["id"] = points_transfer_id
+    print(points_transfer_data)
     points_transfer = Points_Transfer(**points_transfer_data)
-    print(points_transfer)
-    print("before save")
+
     patch_user_rpc_client = PatchUserRpcClient()
     await patch_user_rpc_client.setup()
 
-    request_data = json.dumps({"bonus_point": new_requesting_user_bonus_points})
-    receive_data = json.dumps({"bonus_point": new_receiving_user_bonus_points})
+    try:
+        # Update users' bonus points
+        patch_sent_user_data = {
+            "user_id": requesting_user["id"],
+            "data": {
+                "bonus_point": new_requesting_user_bonus_points
+            }
+        }
+        patch_received_user_data = {
+            "user_id": receiving_user["id"],
+            "data": {
+                "bonus_point": new_receiving_user_bonus_points
+            }
+        }
+        await asyncio.gather(
+            engine.save(points_transfer),
+            patch_user_rpc_client.call(patch_sent_user_data),
+            patch_user_rpc_client.call(patch_received_user_data),
+        )
+    except Exception as e:
+        print(f"Error updating user points: {e}")
+        return {"error": "Failed to update user points"}
+    finally:
+        await patch_user_rpc_client.close()
 
-    await asyncio.gather(
-        engine.save(points_transfer),
-        patch_user_rpc_client.call(requesting_user.id, request_data),
-        patch_user_rpc_client.call(receiving_user.id, receive_data)
-    )
     return points_transfer
+
+async def fetch_user_data(rpc_client, user_id):
+    user_query_data = json.dumps({"user_id": user_id})
+    response = await rpc_client.call(user_query_data)
+    return json.loads(response)
 
 async def get_next_points_transfer_id() -> int:
     last_points_transfer = await engine.find_one(Points_Transfer, sort=Points_Transfer.id.desc())

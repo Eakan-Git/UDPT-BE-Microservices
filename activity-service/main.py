@@ -3,8 +3,10 @@ from fastapi import FastAPI, Response
 from fastapi.responses import HTMLResponse
 from fastapi.middleware.cors import CORSMiddleware
 import uvicorn
+import asyncio
 import os
 from dotenv import load_dotenv
+from rabbitmq.get_activity_rpc_server import GetActivityRPCServer
 
 from middleware.auth_middleware import VerifyTokenMiddleware
 
@@ -61,6 +63,16 @@ async def options_handler(path: str):
 app.include_router(activity_router, prefix="/api/v1", tags=["Activity v1"])
 
 handler = Mangum(app, lifespan="off")
+
+async def start_rpc_server():
+    rpc_server = GetActivityRPCServer()
+    await rpc_server.setup()
+    asyncio.create_task(rpc_server.start())
+    return rpc_server
+
+@app.on_event("startup")
+async def startup_event():
+    await start_rpc_server()
 
 if __name__ == "__main__":
     host = os.getenv("APP_HOST")

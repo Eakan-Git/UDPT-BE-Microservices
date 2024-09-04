@@ -20,3 +20,6 @@ def is_same_day(date1: datetime, date2: datetime):
 
 def is_greater_than(date1: datetime, date2: datetime):
     return date1 > date2
+
+def convert_to_datetime(date: str):
+    return datetime.strptime(date, "%Y-%m-%dT%H:%M:%S.%f")
