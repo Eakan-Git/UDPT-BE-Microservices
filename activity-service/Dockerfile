@@ -6,7 +6,7 @@ COPY ./requirements.txt ./
 
 RUN pip install --no-cache-dir -r requirements.txt
 
-COPY ../activity-service ./
+COPY ./activity-service ./
 
 EXPOSE 8002
 

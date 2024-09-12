@@ -5,7 +5,7 @@ WORKDIR /app
 COPY ./requirements.txt ./
 RUN pip install --no-cache-dir -r requirements.txt
 
-COPY ../points-transfer-service ./
+COPY ./points-transfer-service ./
 
 EXPOSE 8004
 

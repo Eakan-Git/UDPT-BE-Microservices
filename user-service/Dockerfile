@@ -5,7 +5,7 @@ WORKDIR /app
 COPY ./requirements.txt ./
 RUN pip install --no-cache-dir -r requirements.txt
 
-COPY ../user-service ./
+COPY ./user-service ./
 
 EXPOSE 8007
 

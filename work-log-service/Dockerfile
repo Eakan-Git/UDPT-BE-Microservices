@@ -5,7 +5,7 @@ WORKDIR /app
 COPY ./requirements.txt ./
 RUN pip install --no-cache-dir -r requirements.txt
 
-COPY ../work-log-service ./
+COPY ./work-log-service ./
 
 EXPOSE 8010
 

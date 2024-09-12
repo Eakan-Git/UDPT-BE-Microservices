@@ -6,7 +6,7 @@ COPY ./requirements.txt ./
 
 RUN pip install --no-cache-dir -r requirements.txt
 
-COPY ../activity-participation-service ./
+COPY ./activity-participation-service ./
 
 EXPOSE 8001
 
