@@ -1,0 +1,126 @@
+version: '1.0.0'
+
+services:
+  activity-participation-service:
+    build:
+      context: .
+      dockerfile: ./activity-participation-service/Dockerfile
+    container_name: activity-participation-service
+    env_file:
+      - ./activity-participation-service/.env
+    ports:
+      - "8001:8001"
+    networks:
+      - backend-network
+    
+  activity-service:
+    build:
+      context: .
+      dockerfile: ./activity-service/Dockerfile
+    container_name: activity-service
+    env_file:
+      - ./activity-service/.env
+    ports:
+      - "8002:8002"
+    networks:
+      - backend-network
+  
+  auth-service:
+    build:
+      context: .
+      dockerfile: ./auth-service/Dockerfile
+    container_name: auth-service
+    env_file:
+      - ./auth-service/.env
+    ports:
+      - "8003:8003"
+    networks:
+      - backend-network
+
+  points-transfer-service:
+    build:
+      context: .
+      dockerfile: ./points-transfer-service/Dockerfile
+    container_name: points-transfer-service
+    env_file:
+      - ./points-transfer-service/.env
+    ports:
+      - "8004:8004"
+    networks:
+      - backend-network
+
+  ticket-service:
+    build:
+      context: .
+      dockerfile: ./ticket-service/Dockerfile
+    container_name: ticket-service
+    env_file:
+      - ./ticket-service/.env
+    ports:
+      - "8005:8005"
+    networks:
+      - backend-network
+
+  time-sheet-service:
+    build:
+      context: .
+      dockerfile: ./time-sheet-service/Dockerfile
+    container_name: time-sheet-service
+    env_file:
+      - ./time-sheet-service/.env
+    ports:
+      - "8006:8006"
+    networks:
+      - backend-network
+
+  user-service:
+    build:
+      context: .
+      dockerfile: ./user-service/Dockerfile
+    container_name: user-service
+    env_file:
+      - ./user-service/.env
+    ports:
+      - "8007:8007"
+    networks:
+      - backend-network
+
+  voucher-exchange-service:
+    build:
+      context: .
+      dockerfile: ./voucher-exchange-service/Dockerfile
+    container_name: voucher-exchange-service
+    env_file:
+      - ./voucher-exchange-service/.env
+    ports:
+      - "8008:8008"
+    networks:
+      - backend-network
+
+  voucher-service:
+    build:
+      context: .
+      dockerfile: ./voucher-service/Dockerfile
+    container_name: voucher-service
+    env_file:
+      - ./voucher-service/.env
+    ports:
+      - "8009:8009"
+    networks:
+      - backend-network
+
+  work-log-service:
+    build:
+      context: .
+      dockerfile: ./work-log-service/Dockerfile
+    container_name: work-log-service
+    env_file:
+      - ./work-log-service/.env
+    ports:
+      - "8010:8010"
+    networks:
+      - backend-network
+
+networks:
+  backend-network:
+    driver: bridge
