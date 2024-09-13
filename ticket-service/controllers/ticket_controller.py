@@ -45,7 +45,8 @@ async def get_tickets_with_filter(page: int, limit: int, ticket_type: Optional[s
     
     return res
 
-async def create_ticket(ticket_data: dict, user_id: int) -> Ticket:
+async def create_ticket(ticket_data: dict) -> Ticket:
+    user_id = ticket_data.get("user_id")
     if not isinstance(user_id, int) or user_id < 1:
         raise HTTPException(status_code=400, detail="Invalid user id")
 

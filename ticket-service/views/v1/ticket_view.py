@@ -8,8 +8,9 @@ router = APIRouter()
 @router.post("/tickets/", response_model=TicketRead)
 async def create_ticket_endpoint(ticket: TicketCreate, request: Request):
     ticket_data = ticket.dict()
+    ticket_data["user_id"] = request.state.user.get("user_id")
     try:
-        new_ticket = await create_ticket(ticket_data, request.state.user.get("user_id"))
+        new_ticket = await create_ticket(ticket_data)
         return new_ticket
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
