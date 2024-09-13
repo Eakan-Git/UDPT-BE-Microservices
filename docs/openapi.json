@@ -1,0 +1,4002 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Auth service for UDPT project",
+    "description": "API for UDPT project",
+    "version": "0.1.0"
+  },
+  "tags": [
+    {
+      "name": "Auth v1",
+      "x-displayName": "Auth v1"
+    },
+    {
+      "name": "User v1",
+      "x-displayName": "User v1"
+    },
+    {
+      "name": "Activity v1",
+      "x-displayName": "Activity v1"
+    },
+    {
+      "name": "Partivity participation v1",
+      "x-displayName": "Partivity participation v1"
+    },
+    {
+      "name": "Ticket v1",
+      "x-displayName": "Ticket v1"
+    },
+    {
+      "name": "Point Transfer v1",
+      "x-displayName": "Point Transfer v1"
+    },
+    {
+      "name": "Timesheet v1",
+      "x-displayName": "Timesheet v1"
+    },
+    {
+      "name": "Voucher v1",
+      "x-displayName": "Voucher v1"
+    },
+    {
+      "name": "Voucher exchange v1",
+      "x-displayName": "Voucher exchange v1"
+    },
+    {
+      "name": "Work Log v1",
+      "x-displayName": "Work Log v1"
+    }
+  ],
+  "paths": {
+    "/api/v1/auth/login": {
+      "post": {
+        "tags": [
+          "Auth v1"
+        ],
+        "summary": "Login",
+        "operationId": "login_api_v1_auth_login_post",
+        "requestBody": {
+          "content": {
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "$ref": "#/components/schemas/Body_login_api_v1_auth_login_post"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Token"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/auth/logout": {
+      "post": {
+        "tags": [
+          "Auth v1"
+        ],
+        "summary": "Logout",
+        "operationId": "logout_api_v1_auth_logout_post",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ]
+      }
+    },
+    "/api/v1/users/me/": {
+      "get": {
+        "tags": [
+          "User v1"
+        ],
+        "summary": "Get Current User",
+        "operationId": "get_current_user_api_v1_users_me__get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserRead"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ]
+      }
+    },
+    "/api/v1/users/": {
+      "post": {
+        "tags": [
+          "User v1"
+        ],
+        "summary": "Create User Endpoint",
+        "operationId": "create_user_endpoint_api_v1_users__post",
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UserCreate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserRead"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "User v1"
+        ],
+        "summary": "Get Users Endpoint",
+        "operationId": "get_users_endpoint_api_v1_users__get",
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 1,
+              "title": "Page"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 10,
+              "title": "Limit"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "title": "Response Get Users Endpoint Api V1 Users  Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/users/{user_id}": {
+      "get": {
+        "tags": [
+          "User v1"
+        ],
+        "summary": "Get User By Id Endpoint",
+        "operationId": "get_user_by_id_endpoint_api_v1_users__user_id__get",
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "user_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "User Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserRead"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "User v1"
+        ],
+        "summary": "Update User Endpoint",
+        "operationId": "update_user_endpoint_api_v1_users__user_id__patch",
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "user_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "User Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UserUpdate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserRead"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "User v1"
+        ],
+        "summary": "Delete User Endpoint",
+        "operationId": "delete_user_endpoint_api_v1_users__user_id__delete",
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "user_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "User Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "title": "Response Delete User Endpoint Api V1 Users  User Id  Delete"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/users/change-password": {
+      "put": {
+        "tags": [
+          "User v1"
+        ],
+        "summary": "Change Password Endpoint",
+        "operationId": "change_password_endpoint_api_v1_users_change_password_put",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UserChangePassword"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserRead"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ]
+      }
+    },
+    "/api/v1/activities/": {
+      "post": {
+        "tags": [
+          "Activity v1"
+        ],
+        "summary": "Create Activity Endpoint",
+        "operationId": "create_activity_endpoint_api_v1_activities__post",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ActivityCreate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ActivityRead"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "Activity v1"
+        ],
+        "summary": "Get Activities Endpoint",
+        "operationId": "get_activities_endpoint_api_v1_activities__get",
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 1,
+              "title": "Page"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 10,
+              "title": "Limit"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "title": "Response Get Activities Endpoint Api V1 Activities  Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/activities/{activity_id}": {
+      "get": {
+        "tags": [
+          "Activity v1"
+        ],
+        "summary": "Get Activity By Activity Id Endpoint",
+        "operationId": "get_activity_by_activity_id_endpoint_api_v1_activities__activity_id__get",
+        "parameters": [
+          {
+            "name": "activity_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Activity Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ActivityRead"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Activity v1"
+        ],
+        "summary": "Update Activity Endpoint",
+        "operationId": "update_activity_endpoint_api_v1_activities__activity_id__put",
+        "parameters": [
+          {
+            "name": "activity_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Activity Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ActivityUpdate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ActivityRead"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/activity_participations/": {
+      "post": {
+        "tags": [
+          "Partivity participation v1"
+        ],
+        "summary": "Participate Activity Endpoint",
+        "operationId": "participate_activity_endpoint_api_v1_activity_participations__post",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Activity_ParticipationCreate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Activity_ParticipationRead"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "Partivity participation v1"
+        ],
+        "summary": "Get Activity Participations By Activity Id Endpoint",
+        "operationId": "get_activity_participations_by_activity_id_endpoint_api_v1_activity_participations__get",
+        "parameters": [
+          {
+            "name": "activity_id",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Activity Id"
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 1,
+              "title": "Page"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 10,
+              "title": "Limit"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "title": "Response Get Activity Participations By Activity Id Endpoint Api V1 Activity Participations  Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/activity_participations/me": {
+      "get": {
+        "tags": [
+          "Partivity participation v1"
+        ],
+        "summary": "Get Activity Participations By Current User Endpoint",
+        "operationId": "get_activity_participations_by_current_user_endpoint_api_v1_activity_participations_me_get",
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 1,
+              "title": "Page"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 10,
+              "title": "Limit"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "title": "Response Get Activity Participations By Current User Endpoint Api V1 Activity Participations Me Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/activity_participations/{activity_participation_id}": {
+      "get": {
+        "tags": [
+          "Partivity participation v1"
+        ],
+        "summary": "Get Activity Participation By Activity Participation Id Endpoint",
+        "operationId": "get_activity_participation_by_activity_participation_id_endpoint_api_v1_activity_participations__activity_participation_id__get",
+        "parameters": [
+          {
+            "name": "activity_participation_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Activity Participation Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Activity_ParticipationRead"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/activity_participations/user/{user_id}": {
+      "get": {
+        "tags": [
+          "Partivity participation v1"
+        ],
+        "summary": "Get Activity Participations By User Id Endpoint",
+        "operationId": "get_activity_participations_by_user_id_endpoint_api_v1_activity_participations_user__user_id__get",
+        "parameters": [
+          {
+            "name": "user_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "User Id"
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 1,
+              "title": "Page"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 10,
+              "title": "Limit"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "title": "Response Get Activity Participations By User Id Endpoint Api V1 Activity Participations User  User Id  Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/tickets/": {
+      "post": {
+        "tags": [
+          "Ticket v1"
+        ],
+        "summary": "Create Ticket Endpoint",
+        "operationId": "create_ticket_endpoint_api_v1_tickets__post",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TicketCreate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TicketRead"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "Ticket v1"
+        ],
+        "summary": "Get Tickets With Filter Endpoint",
+        "operationId": "get_tickets_with_filter_endpoint_api_v1_tickets__get",
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 1,
+              "title": "Page"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 10,
+              "title": "Limit"
+            }
+          },
+          {
+            "name": "type",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "title": "Type"
+            }
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "title": "Status"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "title": "Response Get Tickets With Filter Endpoint Api V1 Tickets  Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/tickets/me/": {
+      "get": {
+        "tags": [
+          "Ticket v1"
+        ],
+        "summary": "Get My Tickets Endpoint",
+        "operationId": "get_my_tickets_endpoint_api_v1_tickets_me__get",
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 1,
+              "title": "Page"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 10,
+              "title": "Limit"
+            }
+          },
+          {
+            "name": "type",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "title": "Type"
+            }
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "title": "Status"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "title": "Response Get My Tickets Endpoint Api V1 Tickets Me  Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/tickets/{ticket_id}": {
+      "get": {
+        "tags": [
+          "Ticket v1"
+        ],
+        "summary": "Get Ticket By Id Endpoint",
+        "operationId": "get_ticket_by_id_endpoint_api_v1_tickets__ticket_id__get",
+        "parameters": [
+          {
+            "name": "ticket_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Ticket Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TicketRead"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "Ticket v1"
+        ],
+        "summary": "Update Ticket Endpoint",
+        "operationId": "update_ticket_endpoint_api_v1_tickets__ticket_id__patch",
+        "parameters": [
+          {
+            "name": "ticket_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Ticket Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TicketUpdate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TicketRead"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/tickets/users/{user_id}": {
+      "get": {
+        "tags": [
+          "Ticket v1"
+        ],
+        "summary": "Get Tickets By User Id Endpoint",
+        "operationId": "get_tickets_by_user_id_endpoint_api_v1_tickets_users__user_id__get",
+        "parameters": [
+          {
+            "name": "user_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "User Id"
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 1,
+              "title": "Page"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 10,
+              "title": "Limit"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "title": "Response Get Tickets By User Id Endpoint Api V1 Tickets Users  User Id  Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/points-transfers/": {
+      "post": {
+        "tags": [
+          "Point Transfer v1"
+        ],
+        "summary": "Create Points Transfer Endpoint",
+        "description": "Create a points transfer, only available for role: admin, manager",
+        "operationId": "create_points_transfer_endpoint_api_v1_points_transfers__post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Points_TransferCreate"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Points_TransferRead"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/points-transfers/sent/": {
+      "get": {
+        "tags": [
+          "Point Transfer v1"
+        ],
+        "summary": "Get Current User Sent Transfers Endpoint",
+        "description": "Get all points transfers sent by the current user, since transfer is only available for role: admin, manager, this endpoint is only available for those roles too",
+        "operationId": "get_current_user_sent_transfers_endpoint_api_v1_points_transfers_sent__get",
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 1,
+              "title": "Page"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 10,
+              "title": "Limit"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "title": "Response Get Current User Sent Transfers Endpoint Api V1 Points Transfers Sent  Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/points-transfers/received/": {
+      "get": {
+        "tags": [
+          "Point Transfer v1"
+        ],
+        "summary": "Get Current User Received Transfers Endpoint",
+        "description": "Get all points transfers received by the current user",
+        "operationId": "get_current_user_received_transfers_endpoint_api_v1_points_transfers_received__get",
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 1,
+              "title": "Page"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 10,
+              "title": "Limit"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "title": "Response Get Current User Received Transfers Endpoint Api V1 Points Transfers Received  Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/time_sheets/": {
+      "post": {
+        "tags": [
+          "Timesheet v1"
+        ],
+        "summary": "Create Time Sheet Endpoint",
+        "operationId": "create_time_sheet_endpoint_api_v1_time_sheets__post",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TimeSheetCreate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TimeSheetRead"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "Timesheet v1"
+        ],
+        "summary": "Get Time Sheets Endpoint",
+        "operationId": "get_time_sheets_endpoint_api_v1_time_sheets__get",
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 1,
+              "title": "Page"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 10,
+              "title": "Limit"
+            }
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "title": "Status"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "title": "Response Get Time Sheets Endpoint Api V1 Time Sheets  Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/time_sheets/me/": {
+      "get": {
+        "tags": [
+          "Timesheet v1"
+        ],
+        "summary": "Get My Time Sheet Endpoint",
+        "operationId": "get_my_time_sheet_endpoint_api_v1_time_sheets_me__get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TimeSheetRead"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Timesheet v1"
+        ],
+        "summary": "Update My Time Sheet Endpoint",
+        "operationId": "update_my_time_sheet_endpoint_api_v1_time_sheets_me__put",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TimeSheetUpdate"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TimeSheetRead"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/time_sheets/user/{user_id}/": {
+      "get": {
+        "tags": [
+          "Timesheet v1"
+        ],
+        "summary": "Get User Time Sheet Endpoint",
+        "operationId": "get_user_time_sheet_endpoint_api_v1_time_sheets_user__user_id___get",
+        "parameters": [
+          {
+            "name": "user_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "User Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TimeSheetRead"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/time_sheets/{time_sheet_id}/": {
+      "patch": {
+        "tags": [
+          "Timesheet v1"
+        ],
+        "summary": "Manage Time Sheet Endpoint",
+        "operationId": "manage_time_sheet_endpoint_api_v1_time_sheets__time_sheet_id___patch",
+        "parameters": [
+          {
+            "name": "time_sheet_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Time Sheet Id"
+            }
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Status"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TimeSheetRead"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/vouchers/": {
+      "post": {
+        "tags": [
+          "Voucher v1"
+        ],
+        "summary": "Create Voucher Endpoint",
+        "operationId": "create_voucher_endpoint_api_v1_vouchers__post",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/VoucherCreate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VoucherRead"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "Voucher v1"
+        ],
+        "summary": "Get Vouchers Endpoint",
+        "operationId": "get_vouchers_endpoint_api_v1_vouchers__get",
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 1,
+              "title": "Page"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 10,
+              "title": "Limit"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "title": "Response Get Vouchers Endpoint Api V1 Vouchers  Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/vouchers/{voucher_id}": {
+      "get": {
+        "tags": [
+          "Voucher v1"
+        ],
+        "summary": "Get Voucher By Id Endpoint",
+        "operationId": "get_voucher_by_id_endpoint_api_v1_vouchers__voucher_id__get",
+        "parameters": [
+          {
+            "name": "voucher_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Voucher Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VoucherRead"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "Voucher v1"
+        ],
+        "summary": "Update Voucher Endpoint",
+        "operationId": "update_voucher_endpoint_api_v1_vouchers__voucher_id__patch",
+        "parameters": [
+          {
+            "name": "voucher_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Voucher Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/VoucherUpdate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VoucherRead"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/voucher_exchanges/": {
+      "post": {
+        "tags": [
+          "Voucher exchange v1"
+        ],
+        "summary": "Create Voucher Exchange Endpoint",
+        "operationId": "create_voucher_exchange_endpoint_api_v1_voucher_exchanges__post",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/VoucherExchangeCreate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VoucherExchangeRead"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "Voucher exchange v1"
+        ],
+        "summary": "Get Voucher Exchanges Endpoint",
+        "operationId": "get_voucher_exchanges_endpoint_api_v1_voucher_exchanges__get",
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 1,
+              "title": "Page"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 10,
+              "title": "Limit"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "title": "Response Get Voucher Exchanges Endpoint Api V1 Voucher Exchanges  Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/voucher_exchanges/me/": {
+      "get": {
+        "tags": [
+          "Voucher exchange v1"
+        ],
+        "summary": "Get My Voucher Exchanges Endpoint",
+        "operationId": "get_my_voucher_exchanges_endpoint_api_v1_voucher_exchanges_me__get",
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 1,
+              "title": "Page"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 10,
+              "title": "Limit"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "title": "Response Get My Voucher Exchanges Endpoint Api V1 Voucher Exchanges Me  Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/voucher_exchanges/{voucher_exchange_id}/": {
+      "get": {
+        "tags": [
+          "Voucher exchange v1"
+        ],
+        "summary": "Get Voucher Exchange Endpoint",
+        "operationId": "get_voucher_exchange_endpoint_api_v1_voucher_exchanges__voucher_exchange_id___get",
+        "parameters": [
+          {
+            "name": "voucher_exchange_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Voucher Exchange Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VoucherExchangeRead"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/voucher_exchanges/mark_used/{voucher_exchange_id}/": {
+      "patch": {
+        "tags": [
+          "Voucher exchange v1"
+        ],
+        "summary": "Mark Voucher Exchange Used Endpoint",
+        "operationId": "mark_voucher_exchange_used_endpoint_api_v1_voucher_exchanges_mark_used__voucher_exchange_id___patch",
+        "parameters": [
+          {
+            "name": "voucher_exchange_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Voucher Exchange Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VoucherExchangeRead"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/voucher_exchanges/unmark_used/{voucher_exchange_id}/": {
+      "patch": {
+        "tags": [
+          "Voucher exchange v1"
+        ],
+        "summary": "Unmark Voucher Exchange Used Endpoint",
+        "operationId": "unmark_voucher_exchange_used_endpoint_api_v1_voucher_exchanges_unmark_used__voucher_exchange_id___patch",
+        "parameters": [
+          {
+            "name": "voucher_exchange_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Voucher Exchange Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VoucherExchangeRead"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/work-logs/check-in": {
+      "post": {
+        "tags": [
+          "Work Log v1"
+        ],
+        "summary": "User Check In Endpoint",
+        "operationId": "user_check_in_endpoint_api_v1_work_logs_check_in_post",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WorkLogRead"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/work-logs/check-out": {
+      "patch": {
+        "tags": [
+          "Work Log v1"
+        ],
+        "summary": "User Check Out Endpoint",
+        "operationId": "user_check_out_endpoint_api_v1_work_logs_check_out_patch",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WorkLogRead"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/work-logs/": {
+      "get": {
+        "tags": [
+          "Work Log v1"
+        ],
+        "summary": "Get Work Logs Endpoint",
+        "operationId": "get_work_logs_endpoint_api_v1_work_logs__get",
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 1,
+              "title": "Page"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 10,
+              "title": "Limit"
+            }
+          },
+          {
+            "name": "start_date",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date-time",
+              "default": "2024-09-12T00:00:00",
+              "title": "Start Date"
+            }
+          },
+          {
+            "name": "end_date",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date-time",
+              "default": "2024-09-12T23:59:59",
+              "title": "End Date"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "title": "Response Get Work Logs Endpoint Api V1 Work Logs  Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/work-logs/me/": {
+      "get": {
+        "tags": [
+          "Work Log v1"
+        ],
+        "summary": "Get My Work Logs In Date Range Endpoint",
+        "operationId": "get_my_work_logs_in_date_range_endpoint_api_v1_work_logs_me__get",
+        "parameters": [
+          {
+            "name": "start_date",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date-time",
+              "default": "2024-09-12T00:00:00",
+              "title": "Start Date"
+            }
+          },
+          {
+            "name": "end_date",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date-time",
+              "default": "2024-09-12T23:59:59",
+              "title": "End Date"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/WorkLogRead"
+                  },
+                  "title": "Response Get My Work Logs In Date Range Endpoint Api V1 Work Logs Me  Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/work-logs/{work_log_id}": {
+      "get": {
+        "tags": [
+          "Work Log v1"
+        ],
+        "summary": "Get Work Log By Id Endpoint",
+        "operationId": "get_work_log_by_id_endpoint_api_v1_work_logs__work_log_id__get",
+        "parameters": [
+          {
+            "name": "work_log_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Work Log Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WorkLogRead"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/work-logs/user/{user_id}": {
+      "get": {
+        "tags": [
+          "Work Log v1"
+        ],
+        "summary": "Get Work Logs By User Id In Date Range Endpoint",
+        "operationId": "get_work_logs_by_user_id_in_date_range_endpoint_api_v1_work_logs_user__user_id__get",
+        "parameters": [
+          {
+            "name": "user_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "User Id"
+            }
+          },
+          {
+            "name": "start_date",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date-time",
+              "default": "2024-09-12T00:00:00",
+              "title": "Start Date"
+            }
+          },
+          {
+            "name": "end_date",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date-time",
+              "default": "2024-09-12T23:59:59",
+              "title": "End Date"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/WorkLogRead"
+                  },
+                  "title": "Response Get Work Logs By User Id In Date Range Endpoint Api V1 Work Logs User  User Id  Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/work-logs/note/{work_log_id}": {
+      "patch": {
+        "tags": [
+          "Work Log v1"
+        ],
+        "summary": "Update Work Log Note Endpoint",
+        "operationId": "update_work_log_note_endpoint_api_v1_work_logs_note__work_log_id__patch",
+        "parameters": [
+          {
+            "name": "work_log_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Work Log Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/WorkLogUpdateNote"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WorkLogRead"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Body_login_api_v1_auth_login_post": {
+        "properties": {
+          "grant_type": {
+            "anyOf": [
+              {
+                "type": "string",
+                "pattern": "password"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Grant Type"
+          },
+          "username": {
+            "type": "string",
+            "title": "Username"
+          },
+          "password": {
+            "type": "string",
+            "title": "Password"
+          },
+          "scope": {
+            "type": "string",
+            "title": "Scope",
+            "default": ""
+          },
+          "client_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Client Id"
+          },
+          "client_secret": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Client Secret"
+          }
+        },
+        "type": "object",
+        "required": [
+          "username",
+          "password"
+        ],
+        "title": "Body_login_api_v1_auth_login_post"
+      },
+      "HTTPValidationError": {
+        "properties": {
+          "detail": {
+            "items": {
+              "$ref": "#/components/schemas/ValidationError"
+            },
+            "type": "array",
+            "title": "Detail"
+          }
+        },
+        "type": "object",
+        "title": "HTTPValidationError"
+      },
+      "Token": {
+        "properties": {
+          "access_token": {
+            "type": "string",
+            "title": "Access Token"
+          },
+          "token_type": {
+            "type": "string",
+            "title": "Token Type"
+          },
+          "user": {
+            "$ref": "#/components/schemas/TokenData"
+          }
+        },
+        "type": "object",
+        "required": [
+          "access_token",
+          "token_type",
+          "user"
+        ],
+        "title": "Token"
+      },
+      "TokenData": {
+        "properties": {
+          "username": {
+            "type": "string",
+            "title": "Username"
+          },
+          "user_id": {
+            "type": "integer",
+            "title": "User Id"
+          },
+          "role": {
+            "type": "string",
+            "title": "Role"
+          }
+        },
+        "type": "object",
+        "required": [
+          "username",
+          "user_id",
+          "role"
+        ],
+        "title": "TokenData"
+      },
+      "ValidationError": {
+        "properties": {
+          "loc": {
+            "items": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "integer"
+                }
+              ]
+            },
+            "type": "array",
+            "title": "Location"
+          },
+          "msg": {
+            "type": "string",
+            "title": "Message"
+          },
+          "type": {
+            "type": "string",
+            "title": "Error Type"
+          }
+        },
+        "type": "object",
+        "required": [
+          "loc",
+          "msg",
+          "type"
+        ],
+        "title": "ValidationError"
+      },
+      "UserChangePassword": {
+        "properties": {
+          "old_password": {
+            "type": "string",
+            "title": "Old Password",
+            "description": "Old password of the user"
+          },
+          "new_password": {
+            "type": "string",
+            "title": "New Password",
+            "description": "New password of the user"
+          }
+        },
+        "type": "object",
+        "required": [
+          "old_password",
+          "new_password"
+        ],
+        "title": "UserChangePassword"
+      },
+      "UserCreate": {
+        "properties": {
+          "full_name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Full Name",
+            "description": "Full name of the user"
+          },
+          "username": {
+            "type": "string",
+            "title": "Username",
+            "description": "Username of the user"
+          }
+        },
+        "type": "object",
+        "required": [
+          "username"
+        ],
+        "title": "UserCreate"
+      },
+      "UserRead": {
+        "properties": {
+          "full_name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Full Name",
+            "description": "Full name of the user"
+          },
+          "id": {
+            "type": "integer",
+            "title": "Id",
+            "description": "User ID"
+          },
+          "username": {
+            "type": "string",
+            "title": "Username",
+            "description": "Username of the user"
+          },
+          "is_locked": {
+            "type": "boolean",
+            "title": "Is Locked",
+            "description": "Whether the user is locked"
+          },
+          "is_channged_default_password": {
+            "type": "boolean",
+            "title": "Is Channged Default Password",
+            "description": "Whether the user has changed the default password"
+          },
+          "role": {
+            "type": "string",
+            "title": "Role",
+            "description": "User role"
+          },
+          "avatar": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Avatar",
+            "description": "Avatar of the user"
+          },
+          "email": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Email",
+            "description": "Email of the user"
+          },
+          "address": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Address",
+            "description": "User address"
+          },
+          "citizen_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Citizen Id",
+            "description": "Citizen ID"
+          },
+          "tax_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Tax Id",
+            "description": "Tax ID"
+          },
+          "bank_name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Bank Name",
+            "description": "Bank name"
+          },
+          "bank_number": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Bank Number",
+            "description": "Bank account number"
+          },
+          "bonus_point": {
+            "type": "integer",
+            "title": "Bonus Point",
+            "description": "Bonus points of the user"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Created At",
+            "description": "User created date"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Updated At",
+            "description": "User modified date"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "username",
+          "is_locked",
+          "is_channged_default_password",
+          "role",
+          "bonus_point",
+          "created_at",
+          "updated_at"
+        ],
+        "title": "UserRead"
+      },
+      "UserUpdate": {
+        "properties": {
+          "avatar": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Avatar",
+            "description": "Avatar of the user"
+          },
+          "email": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Email",
+            "description": "Email of the user"
+          },
+          "role": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Role",
+            "description": "User role"
+          },
+          "is_locked": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Is Locked",
+            "description": "Whether the user is locked",
+            "default": false
+          },
+          "address": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Address",
+            "description": "User address"
+          },
+          "citizen_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Citizen Id",
+            "description": "Citizen ID"
+          },
+          "tax_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Tax Id",
+            "description": "Tax ID"
+          },
+          "bank_name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Bank Name",
+            "description": "Bank name"
+          },
+          "bank_number": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Bank Number",
+            "description": "Bank account number"
+          },
+          "bonus_point": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Bonus Point",
+            "description": "Bonus points of the user"
+          }
+        },
+        "type": "object",
+        "title": "UserUpdate"
+      },
+      "ActivityCreate": {
+        "properties": {
+          "title": {
+            "type": "string",
+            "title": "Title",
+            "description": "Title of the activity"
+          },
+          "type": {
+            "type": "string",
+            "title": "Type",
+            "description": "Type of the activity"
+          },
+          "from_date": {
+            "type": "string",
+            "format": "date-time",
+            "title": "From Date",
+            "description": "Start date of the activity"
+          },
+          "to_date": {
+            "type": "string",
+            "format": "date-time",
+            "title": "To Date",
+            "description": "End date of the activity"
+          },
+          "description": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Description",
+            "description": "Description of the activity"
+          }
+        },
+        "type": "object",
+        "required": [
+          "title",
+          "type",
+          "from_date",
+          "to_date"
+        ],
+        "title": "ActivityCreate"
+      },
+      "ActivityRead": {
+        "properties": {
+          "title": {
+            "type": "string",
+            "title": "Title",
+            "description": "Title of the activity"
+          },
+          "id": {
+            "type": "integer",
+            "title": "Id",
+            "description": "Activity ID"
+          },
+          "type": {
+            "type": "string",
+            "title": "Type",
+            "description": "Type of the activity"
+          },
+          "from_date": {
+            "type": "string",
+            "format": "date-time",
+            "title": "From Date",
+            "description": "Start date of the activity"
+          },
+          "to_date": {
+            "type": "string",
+            "format": "date-time",
+            "title": "To Date",
+            "description": "End date of the activity"
+          },
+          "description": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Description",
+            "description": "Description of the activity"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Created At",
+            "description": "Activity created date"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Updated At",
+            "description": "Activity modified date"
+          }
+        },
+        "type": "object",
+        "required": [
+          "title",
+          "id",
+          "type",
+          "from_date",
+          "to_date",
+          "created_at",
+          "updated_at"
+        ],
+        "title": "ActivityRead"
+      },
+      "ActivityUpdate": {
+        "properties": {
+          "type": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Type",
+            "description": "Type of the activity"
+          },
+          "from_date": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "From Date",
+            "description": "Start date of the activity"
+          },
+          "to_date": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "To Date",
+            "description": "End date of the activity"
+          },
+          "title": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Title",
+            "description": "Title of the activity"
+          },
+          "description": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Description",
+            "description": "Description of the activity"
+          }
+        },
+        "type": "object",
+        "title": "ActivityUpdate"
+      },
+      "Activity_ParticipationCreate": {
+        "properties": {
+          "activity_id": {
+            "type": "integer",
+            "title": "Activity Id",
+            "description": "Activity ID"
+          }
+        },
+        "type": "object",
+        "required": [
+          "activity_id"
+        ],
+        "title": "Activity_ParticipationCreate"
+      },
+      "Activity_ParticipationRead": {
+        "properties": {
+          "activity_id": {
+            "type": "integer",
+            "title": "Activity Id",
+            "description": "Activity ID"
+          },
+          "user_id": {
+            "type": "integer",
+            "title": "User Id",
+            "description": "User ID"
+          },
+          "id": {
+            "type": "integer",
+            "title": "Id",
+            "description": "Activity Participation ID"
+          },
+          "activity_points": {
+            "type": "integer",
+            "title": "Activity Points",
+            "description": "Activity points"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Created At",
+            "description": "Activity participation created date"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Updated At",
+            "description": "Activity participation modified date"
+          }
+        },
+        "type": "object",
+        "required": [
+          "activity_id",
+          "user_id",
+          "id",
+          "activity_points",
+          "created_at",
+          "updated_at"
+        ],
+        "title": "Activity_ParticipationRead"
+      },
+      "TicketCreate": {
+        "properties": {
+          "user_id": {
+            "type": "integer",
+            "title": "User Id",
+            "description": "User ID"
+          },
+          "from_date": {
+            "type": "string",
+            "format": "date-time",
+            "title": "From Date",
+            "description": "Ticket for date"
+          },
+          "to_date": {
+            "type": "string",
+            "format": "date-time",
+            "title": "To Date",
+            "description": "Ticket to date"
+          },
+          "type": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Type",
+            "description": "Ticket type"
+          },
+          "description": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Description",
+            "description": "Ticket description"
+          }
+        },
+        "type": "object",
+        "required": [
+          "user_id",
+          "from_date",
+          "to_date"
+        ],
+        "title": "TicketCreate"
+      },
+      "TicketRead": {
+        "properties": {
+          "user_id": {
+            "type": "integer",
+            "title": "User Id",
+            "description": "User ID"
+          },
+          "from_date": {
+            "type": "string",
+            "format": "date-time",
+            "title": "From Date",
+            "description": "Ticket for date"
+          },
+          "to_date": {
+            "type": "string",
+            "format": "date-time",
+            "title": "To Date",
+            "description": "Ticket to date"
+          },
+          "id": {
+            "type": "integer",
+            "title": "Id",
+            "description": "Ticket ID"
+          },
+          "type": {
+            "type": "string",
+            "title": "Type",
+            "description": "Ticket type"
+          },
+          "status": {
+            "type": "string",
+            "title": "Status",
+            "description": "Ticket status"
+          },
+          "description": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Description",
+            "description": "Ticket description"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Created At",
+            "description": "Ticket created date"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Updated At",
+            "description": "Ticket modified date"
+          }
+        },
+        "type": "object",
+        "required": [
+          "user_id",
+          "from_date",
+          "to_date",
+          "id",
+          "type",
+          "status",
+          "created_at",
+          "updated_at"
+        ],
+        "title": "TicketRead"
+      },
+      "TicketUpdate": {
+        "properties": {
+          "type": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Type",
+            "description": "Ticket type"
+          },
+          "status": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Status",
+            "description": "Ticket status"
+          },
+          "description": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Description",
+            "description": "Ticket description"
+          },
+          "from_date": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "From Date",
+            "description": "Ticket for date"
+          },
+          "to_date": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "To Date",
+            "description": "Ticket to date"
+          }
+        },
+        "type": "object",
+        "title": "TicketUpdate"
+      },
+      "Points_TransferCreate": {
+        "properties": {
+          "points": {
+            "type": "integer",
+            "title": "Points",
+            "description": "Points to transfer, must be greater than 100"
+          },
+          "to_user_id": {
+            "type": "integer",
+            "title": "To User Id",
+            "description": "User ID to transfer points to"
+          },
+          "description": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Description",
+            "description": "Description of the points transfer"
+          }
+        },
+        "type": "object",
+        "required": [
+          "points",
+          "to_user_id"
+        ],
+        "title": "Points_TransferCreate"
+      },
+      "Points_TransferRead": {
+        "properties": {
+          "points": {
+            "type": "integer",
+            "title": "Points",
+            "description": "Points to transfer, must be greater than 100"
+          },
+          "id": {
+            "type": "integer",
+            "title": "Id",
+            "description": "Points transfer ID"
+          },
+          "from_user_id": {
+            "type": "integer",
+            "title": "From User Id",
+            "description": "User ID to transfer points from"
+          },
+          "to_user_id": {
+            "type": "integer",
+            "title": "To User Id",
+            "description": "User ID to transfer points to"
+          },
+          "description": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Description",
+            "description": "Description of the points transfer"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Created At",
+            "description": "Points transfer created date"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Updated At",
+            "description": "Points transfer modified date"
+          }
+        },
+        "type": "object",
+        "required": [
+          "points",
+          "id",
+          "from_user_id",
+          "to_user_id",
+          "created_at",
+          "updated_at"
+        ],
+        "title": "Points_TransferRead"
+      },
+      "TimeSheetCreate": {
+        "properties": {
+          "current_value": {
+            "anyOf": [
+              {
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Current Value",
+            "description": "Current time sheet value",
+            "default": {
+              "monday": {
+                "is_leave": false
+              },
+              "tuesday": {
+                "is_leave": false
+              },
+              "wednesday": {
+                "is_leave": false
+              },
+              "thursday": {
+                "is_leave": false
+              },
+              "friday": {
+                "is_leave": false
+              },
+              "saturday": {
+                "is_leave": true
+              },
+              "sunday": {
+                "is_leave": true
+              }
+            }
+          }
+        },
+        "type": "object",
+        "title": "TimeSheetCreate"
+      },
+      "TimeSheetRead": {
+        "properties": {
+          "id": {
+            "type": "integer",
+            "title": "Id",
+            "description": "Time sheet ID"
+          },
+          "user_id": {
+            "type": "integer",
+            "title": "User Id",
+            "description": "User ID"
+          },
+          "previous_value": {
+            "type": "object",
+            "title": "Previous Value",
+            "description": "Previous time sheet value"
+          },
+          "current_value": {
+            "type": "object",
+            "title": "Current Value",
+            "description": "Current time sheet value"
+          },
+          "status": {
+            "type": "string",
+            "title": "Status",
+            "description": "Time sheet status"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Created At",
+            "description": "Time sheet created date"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Updated At",
+            "description": "Time sheet modified date"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "user_id",
+          "previous_value",
+          "current_value",
+          "status",
+          "created_at",
+          "updated_at"
+        ],
+        "title": "TimeSheetRead"
+      },
+      "TimeSheetUpdate": {
+        "properties": {
+          "current_value": {
+            "anyOf": [
+              {
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Current Value",
+            "description": "Current time sheet value",
+            "default": {
+              "monday": {
+                "is_leave": false
+              },
+              "tuesday": {
+                "is_leave": false
+              },
+              "wednesday": {
+                "is_leave": false
+              },
+              "thursday": {
+                "is_leave": false
+              },
+              "friday": {
+                "is_leave": false
+              },
+              "saturday": {
+                "is_leave": true
+              },
+              "sunday": {
+                "is_leave": true
+              }
+            }
+          }
+        },
+        "type": "object",
+        "title": "TimeSheetUpdate"
+      },
+      "VoucherCreate": {
+        "properties": {
+          "require_point": {
+            "type": "integer",
+            "exclusiveMinimum": 0,
+            "title": "Require Point"
+          },
+          "title": {
+            "type": "string",
+            "minLength": 1,
+            "title": "Title",
+            "description": "Title of the voucher"
+          },
+          "description": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Description",
+            "description": "Description of the voucher"
+          },
+          "provider": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Provider",
+            "description": "Provider of the voucher"
+          },
+          "url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Url",
+            "description": "URL of the voucher"
+          }
+        },
+        "type": "object",
+        "required": [
+          "require_point",
+          "title"
+        ],
+        "title": "VoucherCreate"
+      },
+      "VoucherRead": {
+        "properties": {
+          "id": {
+            "type": "integer",
+            "title": "Id",
+            "description": "ID of the voucher"
+          },
+          "provider": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Provider",
+            "description": "Provider of the voucher"
+          },
+          "url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Url",
+            "description": "URL of the voucher"
+          },
+          "require_point": {
+            "type": "integer",
+            "exclusiveMinimum": 0,
+            "title": "Require Point",
+            "description": "Point required to redeem the voucher"
+          },
+          "title": {
+            "type": "string",
+            "minLength": 1,
+            "title": "Title",
+            "description": "Title of the voucher"
+          },
+          "description": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Description",
+            "description": "Description of the voucher"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Created At",
+            "description": "Created date of the voucher"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Updated At",
+            "description": "Updated date of the voucher"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "require_point",
+          "title",
+          "created_at",
+          "updated_at"
+        ],
+        "title": "VoucherRead"
+      },
+      "VoucherUpdate": {
+        "properties": {
+          "require_point": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "exclusiveMinimum": 0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Require Point"
+          },
+          "title": {
+            "anyOf": [
+              {
+                "type": "string",
+                "minLength": 1
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Title",
+            "description": "Title of the voucher"
+          },
+          "description": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Description",
+            "description": "Description of the voucher"
+          },
+          "provider": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Provider",
+            "description": "Provider of the voucher"
+          },
+          "url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Url",
+            "description": "URL of the voucher"
+          }
+        },
+        "type": "object",
+        "title": "VoucherUpdate"
+      },
+      "VoucherExchangeCreate": {
+        "properties": {
+          "voucher_id": {
+            "type": "integer",
+            "title": "Voucher Id",
+            "description": "Voucher ID"
+          }
+        },
+        "type": "object",
+        "required": [
+          "voucher_id"
+        ],
+        "title": "VoucherExchangeCreate"
+      },
+      "VoucherExchangeRead": {
+        "properties": {
+          "voucher_title": {
+            "type": "string",
+            "title": "Voucher Title",
+            "description": "Voucher title"
+          },
+          "voucher_description": {
+            "type": "string",
+            "title": "Voucher Description",
+            "description": "Voucher description"
+          },
+          "id": {
+            "type": "integer",
+            "title": "Id",
+            "description": "Voucher ID"
+          },
+          "user_id": {
+            "type": "integer",
+            "title": "User Id",
+            "description": "User ID"
+          },
+          "code": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Code",
+            "description": "Voucher code"
+          },
+          "point_used": {
+            "type": "integer",
+            "title": "Point Used",
+            "description": "Point used"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Created At",
+            "description": "Voucher created at"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Updated At",
+            "description": "Voucher updated at"
+          },
+          "is_used": {
+            "type": "boolean",
+            "title": "Is Used",
+            "description": "Is this voucher used?"
+          }
+        },
+        "type": "object",
+        "required": [
+          "voucher_title",
+          "voucher_description",
+          "id",
+          "user_id",
+          "point_used",
+          "created_at",
+          "updated_at",
+          "is_used"
+        ],
+        "title": "VoucherExchangeRead"
+      },
+      "WorkLogRead": {
+        "properties": {
+          "user_id": {
+            "type": "integer",
+            "title": "User Id",
+            "description": "User ID"
+          },
+          "id": {
+            "type": "integer",
+            "title": "Id",
+            "description": "Work log ID"
+          },
+          "check_in": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Check In",
+            "description": "Check in time"
+          },
+          "check_out": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Check Out",
+            "description": "Check out time"
+          },
+          "note": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Note",
+            "description": "Note"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Created At",
+            "description": "Work log created date"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Updated At",
+            "description": "Work log modified date"
+          }
+        },
+        "type": "object",
+        "required": [
+          "user_id",
+          "id",
+          "check_in",
+          "created_at",
+          "updated_at"
+        ],
+        "title": "WorkLogRead"
+      },
+      "WorkLogUpdateNote": {
+        "properties": {
+          "note": {
+            "type": "string",
+            "title": "Note",
+            "description": "Note"
+          }
+        },
+        "type": "object",
+        "required": [
+          "note"
+        ],
+        "title": "WorkLogUpdateNote"
+      }
+    },
+    "securitySchemes": {
+      "OAuth2PasswordBearer": {
+        "type": "oauth2",
+        "flows": {
+          "password": {
+            "scopes": {},
+            "tokenUrl": "/api/v1/auth/login"
+          }
+        }
+      }
+    }
+  },
+  "x-tagGroups": [
+    {
+      "name": "Auth service for UDPT project",
+      "tags": [
+        "Auth v1"
+      ]
+    },
+    {
+      "name": "User service for UDPT project",
+      "tags": [
+        "User v1"
+      ]
+    },
+    {
+      "name": "Activity service for UDPT project",
+      "tags": [
+        "Activity v1"
+      ]
+    },
+    {
+      "name": "Activity participation service for UDPT project",
+      "tags": [
+        "Partivity participation v1"
+      ]
+    },
+    {
+      "name": "Ticket service for UDPT project",
+      "tags": [
+        "Ticket v1"
+      ]
+    },
+    {
+      "name": "Point transfer service for UDPT project",
+      "tags": [
+        "Point Transfer v1"
+      ]
+    },
+    {
+      "name": "Timesheet service for UDPT project",
+      "tags": [
+        "Timesheet v1"
+      ]
+    },
+    {
+      "name": "Voucher service for UDPT project",
+      "tags": [
+        "Voucher v1"
+      ]
+    },
+    {
+      "name": "Voucher exchange service for UDPT project",
+      "tags": [
+        "Voucher exchange v1"
+      ]
+    },
+    {
+      "name": "Work Log service for UDPT project",
+      "tags": [
+        "Work Log v1"
+      ]
+    }
+  ]
+}

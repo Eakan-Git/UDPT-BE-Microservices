@@ -1,0 +1,417 @@
+{
+    "openapi": "3.1.0",
+    "info": {
+        "title": "Voucher exchange service for UDPT project",
+        "description": "API for UDPT project",
+        "version": "0.1.0"
+    },
+    "paths": {
+        "/api/v1/voucher_exchanges/": {
+            "post": {
+                "tags": [
+                    "Voucher exchange v1"
+                ],
+                "summary": "Create Voucher Exchange Endpoint",
+                "operationId": "create_voucher_exchange_endpoint_api_v1_voucher_exchanges__post",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/VoucherExchangeCreate"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/VoucherExchangeRead"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "get": {
+                "tags": [
+                    "Voucher exchange v1"
+                ],
+                "summary": "Get Voucher Exchanges Endpoint",
+                "operationId": "get_voucher_exchanges_endpoint_api_v1_voucher_exchanges__get",
+                "parameters": [
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 1,
+                            "title": "Page"
+                        }
+                    },
+                    {
+                        "name": "limit",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 10,
+                            "title": "Limit"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "title": "Response Get Voucher Exchanges Endpoint Api V1 Voucher Exchanges  Get"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/voucher_exchanges/me/": {
+            "get": {
+                "tags": [
+                    "Voucher exchange v1"
+                ],
+                "summary": "Get My Voucher Exchanges Endpoint",
+                "operationId": "get_my_voucher_exchanges_endpoint_api_v1_voucher_exchanges_me__get",
+                "parameters": [
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 1,
+                            "title": "Page"
+                        }
+                    },
+                    {
+                        "name": "limit",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 10,
+                            "title": "Limit"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "title": "Response Get My Voucher Exchanges Endpoint Api V1 Voucher Exchanges Me  Get"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/voucher_exchanges/{voucher_exchange_id}/": {
+            "get": {
+                "tags": [
+                    "Voucher exchange v1"
+                ],
+                "summary": "Get Voucher Exchange Endpoint",
+                "operationId": "get_voucher_exchange_endpoint_api_v1_voucher_exchanges__voucher_exchange_id___get",
+                "parameters": [
+                    {
+                        "name": "voucher_exchange_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "title": "Voucher Exchange Id"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/VoucherExchangeRead"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/voucher_exchanges/mark_used/{voucher_exchange_id}/": {
+            "patch": {
+                "tags": [
+                    "Voucher exchange v1"
+                ],
+                "summary": "Mark Voucher Exchange Used Endpoint",
+                "operationId": "mark_voucher_exchange_used_endpoint_api_v1_voucher_exchanges_mark_used__voucher_exchange_id___patch",
+                "parameters": [
+                    {
+                        "name": "voucher_exchange_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "title": "Voucher Exchange Id"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/VoucherExchangeRead"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/voucher_exchanges/unmark_used/{voucher_exchange_id}/": {
+            "patch": {
+                "tags": [
+                    "Voucher exchange v1"
+                ],
+                "summary": "Unmark Voucher Exchange Used Endpoint",
+                "operationId": "unmark_voucher_exchange_used_endpoint_api_v1_voucher_exchanges_unmark_used__voucher_exchange_id___patch",
+                "parameters": [
+                    {
+                        "name": "voucher_exchange_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "title": "Voucher Exchange Id"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/VoucherExchangeRead"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "HTTPValidationError": {
+                "properties": {
+                    "detail": {
+                        "items": {
+                            "$ref": "#/components/schemas/ValidationError"
+                        },
+                        "type": "array",
+                        "title": "Detail"
+                    }
+                },
+                "type": "object",
+                "title": "HTTPValidationError"
+            },
+            "ValidationError": {
+                "properties": {
+                    "loc": {
+                        "items": {
+                            "anyOf": [
+                                {
+                                    "type": "string"
+                                },
+                                {
+                                    "type": "integer"
+                                }
+                            ]
+                        },
+                        "type": "array",
+                        "title": "Location"
+                    },
+                    "msg": {
+                        "type": "string",
+                        "title": "Message"
+                    },
+                    "type": {
+                        "type": "string",
+                        "title": "Error Type"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "loc",
+                    "msg",
+                    "type"
+                ],
+                "title": "ValidationError"
+            },
+            "VoucherExchangeCreate": {
+                "properties": {
+                    "voucher_id": {
+                        "type": "integer",
+                        "title": "Voucher Id",
+                        "description": "Voucher ID"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "voucher_id"
+                ],
+                "title": "VoucherExchangeCreate"
+            },
+            "VoucherExchangeRead": {
+                "properties": {
+                    "voucher_title": {
+                        "type": "string",
+                        "title": "Voucher Title",
+                        "description": "Voucher title"
+                    },
+                    "voucher_description": {
+                        "type": "string",
+                        "title": "Voucher Description",
+                        "description": "Voucher description"
+                    },
+                    "id": {
+                        "type": "integer",
+                        "title": "Id",
+                        "description": "Voucher ID"
+                    },
+                    "user_id": {
+                        "type": "integer",
+                        "title": "User Id",
+                        "description": "User ID"
+                    },
+                    "code": {
+                        "anyOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Code",
+                        "description": "Voucher code"
+                    },
+                    "point_used": {
+                        "type": "integer",
+                        "title": "Point Used",
+                        "description": "Point used"
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "title": "Created At",
+                        "description": "Voucher created at"
+                    },
+                    "updated_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "title": "Updated At",
+                        "description": "Voucher updated at"
+                    },
+                    "is_used": {
+                        "type": "boolean",
+                        "title": "Is Used",
+                        "description": "Is this voucher used?"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "voucher_title",
+                    "voucher_description",
+                    "id",
+                    "user_id",
+                    "point_used",
+                    "created_at",
+                    "updated_at",
+                    "is_used"
+                ],
+                "title": "VoucherExchangeRead"
+            }
+        }
+    }
+}

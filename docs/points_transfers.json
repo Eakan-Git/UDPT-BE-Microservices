@@ -1,0 +1,302 @@
+{
+    "openapi": "3.1.0",
+    "info": {
+        "title": "Point transfer service for UDPT project",
+        "description": "API for UDPT project",
+        "version": "0.1.0"
+    },
+    "paths": {
+        "/api/v1/points-transfers/": {
+            "post": {
+                "tags": [
+                    "Point Transfer v1"
+                ],
+                "summary": "Create Points Transfer Endpoint",
+                "description": "Create a points transfer, only available for role: admin, manager",
+                "operationId": "create_points_transfer_endpoint_api_v1_points_transfers__post",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Points_TransferCreate"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Points_TransferRead"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/points-transfers/sent/": {
+            "get": {
+                "tags": [
+                    "Point Transfer v1"
+                ],
+                "summary": "Get Current User Sent Transfers Endpoint",
+                "description": "Get all points transfers sent by the current user, since transfer is only available for role: admin, manager, this endpoint is only available for those roles too",
+                "operationId": "get_current_user_sent_transfers_endpoint_api_v1_points_transfers_sent__get",
+                "parameters": [
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 1,
+                            "title": "Page"
+                        }
+                    },
+                    {
+                        "name": "limit",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 10,
+                            "title": "Limit"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "title": "Response Get Current User Sent Transfers Endpoint Api V1 Points Transfers Sent  Get"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/points-transfers/received/": {
+            "get": {
+                "tags": [
+                    "Point Transfer v1"
+                ],
+                "summary": "Get Current User Received Transfers Endpoint",
+                "description": "Get all points transfers received by the current user",
+                "operationId": "get_current_user_received_transfers_endpoint_api_v1_points_transfers_received__get",
+                "parameters": [
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 1,
+                            "title": "Page"
+                        }
+                    },
+                    {
+                        "name": "limit",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 10,
+                            "title": "Limit"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "title": "Response Get Current User Received Transfers Endpoint Api V1 Points Transfers Received  Get"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "HTTPValidationError": {
+                "properties": {
+                    "detail": {
+                        "items": {
+                            "$ref": "#/components/schemas/ValidationError"
+                        },
+                        "type": "array",
+                        "title": "Detail"
+                    }
+                },
+                "type": "object",
+                "title": "HTTPValidationError"
+            },
+            "Points_TransferCreate": {
+                "properties": {
+                    "points": {
+                        "type": "integer",
+                        "title": "Points",
+                        "description": "Points to transfer, must be greater than 100"
+                    },
+                    "to_user_id": {
+                        "type": "integer",
+                        "title": "To User Id",
+                        "description": "User ID to transfer points to"
+                    },
+                    "description": {
+                        "anyOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Description",
+                        "description": "Description of the points transfer"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "points",
+                    "to_user_id"
+                ],
+                "title": "Points_TransferCreate"
+            },
+            "Points_TransferRead": {
+                "properties": {
+                    "points": {
+                        "type": "integer",
+                        "title": "Points",
+                        "description": "Points to transfer, must be greater than 100"
+                    },
+                    "id": {
+                        "type": "integer",
+                        "title": "Id",
+                        "description": "Points transfer ID"
+                    },
+                    "from_user_id": {
+                        "type": "integer",
+                        "title": "From User Id",
+                        "description": "User ID to transfer points from"
+                    },
+                    "to_user_id": {
+                        "type": "integer",
+                        "title": "To User Id",
+                        "description": "User ID to transfer points to"
+                    },
+                    "description": {
+                        "anyOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Description",
+                        "description": "Description of the points transfer"
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "title": "Created At",
+                        "description": "Points transfer created date"
+                    },
+                    "updated_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "title": "Updated At",
+                        "description": "Points transfer modified date"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "points",
+                    "id",
+                    "from_user_id",
+                    "to_user_id",
+                    "created_at",
+                    "updated_at"
+                ],
+                "title": "Points_TransferRead"
+            },
+            "ValidationError": {
+                "properties": {
+                    "loc": {
+                        "items": {
+                            "anyOf": [
+                                {
+                                    "type": "string"
+                                },
+                                {
+                                    "type": "integer"
+                                }
+                            ]
+                        },
+                        "type": "array",
+                        "title": "Location"
+                    },
+                    "msg": {
+                        "type": "string",
+                        "title": "Message"
+                    },
+                    "type": {
+                        "type": "string",
+                        "title": "Error Type"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "loc",
+                    "msg",
+                    "type"
+                ],
+                "title": "ValidationError"
+            }
+        }
+    }
+}

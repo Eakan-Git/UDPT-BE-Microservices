@@ -143,8 +143,8 @@ async def get_tickets_by_user_id(user_id: int, page: int, limit: int, ticket_typ
     
     return res
 
-async def update_ticket(ticket_id: int, ticket_data: dict, current_user_id: int) -> Ticket:
-    ticket = await engine.find_one(Ticket, Ticket.id == ticket_id, Ticket.user_id == current_user_id)
+async def update_ticket(ticket_id: int, ticket_data: dict) -> Ticket:
+    ticket = await engine.find_one(Ticket, Ticket.id == ticket_id)
     if ticket:
         for key, value in ticket_data.items():
             if hasattr(ticket, key) and value is not None:

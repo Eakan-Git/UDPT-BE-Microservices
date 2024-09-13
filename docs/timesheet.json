@@ -1,0 +1,449 @@
+{
+    "openapi": "3.1.0",
+    "info": {
+        "title": "Timesheet service for UDPT project",
+        "description": "API for UDPT project",
+        "version": "0.1.0"
+    },
+    "paths": {
+        "/api/v1/time_sheets/": {
+            "post": {
+                "tags": [
+                    "Timesheet v1"
+                ],
+                "summary": "Create Time Sheet Endpoint",
+                "operationId": "create_time_sheet_endpoint_api_v1_time_sheets__post",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/TimeSheetCreate"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/TimeSheetRead"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "get": {
+                "tags": [
+                    "Timesheet v1"
+                ],
+                "summary": "Get Time Sheets Endpoint",
+                "operationId": "get_time_sheets_endpoint_api_v1_time_sheets__get",
+                "parameters": [
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 1,
+                            "title": "Page"
+                        }
+                    },
+                    {
+                        "name": "limit",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 10,
+                            "title": "Limit"
+                        }
+                    },
+                    {
+                        "name": "status",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "title": "Status"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "title": "Response Get Time Sheets Endpoint Api V1 Time Sheets  Get"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/time_sheets/me/": {
+            "get": {
+                "tags": [
+                    "Timesheet v1"
+                ],
+                "summary": "Get My Time Sheet Endpoint",
+                "operationId": "get_my_time_sheet_endpoint_api_v1_time_sheets_me__get",
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/TimeSheetRead"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "Timesheet v1"
+                ],
+                "summary": "Update My Time Sheet Endpoint",
+                "operationId": "update_my_time_sheet_endpoint_api_v1_time_sheets_me__put",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/TimeSheetUpdate"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/TimeSheetRead"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/time_sheets/user/{user_id}/": {
+            "get": {
+                "tags": [
+                    "Timesheet v1"
+                ],
+                "summary": "Get User Time Sheet Endpoint",
+                "operationId": "get_user_time_sheet_endpoint_api_v1_time_sheets_user__user_id___get",
+                "parameters": [
+                    {
+                        "name": "user_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "title": "User Id"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/TimeSheetRead"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/time_sheets/{time_sheet_id}/": {
+            "patch": {
+                "tags": [
+                    "Timesheet v1"
+                ],
+                "summary": "Manage Time Sheet Endpoint",
+                "operationId": "manage_time_sheet_endpoint_api_v1_time_sheets__time_sheet_id___patch",
+                "parameters": [
+                    {
+                        "name": "time_sheet_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "title": "Time Sheet Id"
+                        }
+                    },
+                    {
+                        "name": "status",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "title": "Status"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/TimeSheetRead"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "HTTPValidationError": {
+                "properties": {
+                    "detail": {
+                        "items": {
+                            "$ref": "#/components/schemas/ValidationError"
+                        },
+                        "type": "array",
+                        "title": "Detail"
+                    }
+                },
+                "type": "object",
+                "title": "HTTPValidationError"
+            },
+            "TimeSheetCreate": {
+                "properties": {
+                    "current_value": {
+                        "anyOf": [
+                            {
+                                "type": "object"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Current Value",
+                        "description": "Current time sheet value",
+                        "default": {
+                            "monday": {
+                                "is_leave": false
+                            },
+                            "tuesday": {
+                                "is_leave": false
+                            },
+                            "wednesday": {
+                                "is_leave": false
+                            },
+                            "thursday": {
+                                "is_leave": false
+                            },
+                            "friday": {
+                                "is_leave": false
+                            },
+                            "saturday": {
+                                "is_leave": true
+                            },
+                            "sunday": {
+                                "is_leave": true
+                            }
+                        }
+                    }
+                },
+                "type": "object",
+                "title": "TimeSheetCreate"
+            },
+            "TimeSheetRead": {
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "title": "Id",
+                        "description": "Time sheet ID"
+                    },
+                    "user_id": {
+                        "type": "integer",
+                        "title": "User Id",
+                        "description": "User ID"
+                    },
+                    "previous_value": {
+                        "type": "object",
+                        "title": "Previous Value",
+                        "description": "Previous time sheet value"
+                    },
+                    "current_value": {
+                        "type": "object",
+                        "title": "Current Value",
+                        "description": "Current time sheet value"
+                    },
+                    "status": {
+                        "type": "string",
+                        "title": "Status",
+                        "description": "Time sheet status"
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "title": "Created At",
+                        "description": "Time sheet created date"
+                    },
+                    "updated_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "title": "Updated At",
+                        "description": "Time sheet modified date"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "id",
+                    "user_id",
+                    "previous_value",
+                    "current_value",
+                    "status",
+                    "created_at",
+                    "updated_at"
+                ],
+                "title": "TimeSheetRead"
+            },
+            "TimeSheetUpdate": {
+                "properties": {
+                    "current_value": {
+                        "anyOf": [
+                            {
+                                "type": "object"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Current Value",
+                        "description": "Current time sheet value",
+                        "default": {
+                            "monday": {
+                                "is_leave": false
+                            },
+                            "tuesday": {
+                                "is_leave": false
+                            },
+                            "wednesday": {
+                                "is_leave": false
+                            },
+                            "thursday": {
+                                "is_leave": false
+                            },
+                            "friday": {
+                                "is_leave": false
+                            },
+                            "saturday": {
+                                "is_leave": true
+                            },
+                            "sunday": {
+                                "is_leave": true
+                            }
+                        }
+                    }
+                },
+                "type": "object",
+                "title": "TimeSheetUpdate"
+            },
+            "ValidationError": {
+                "properties": {
+                    "loc": {
+                        "items": {
+                            "anyOf": [
+                                {
+                                    "type": "string"
+                                },
+                                {
+                                    "type": "integer"
+                                }
+                            ]
+                        },
+                        "type": "array",
+                        "title": "Location"
+                    },
+                    "msg": {
+                        "type": "string",
+                        "title": "Message"
+                    },
+                    "type": {
+                        "type": "string",
+                        "title": "Error Type"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "loc",
+                    "msg",
+                    "type"
+                ],
+                "title": "ValidationError"
+            }
+        }
+    }
+}

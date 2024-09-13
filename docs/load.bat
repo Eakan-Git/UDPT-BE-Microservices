@@ -1,0 +1,1 @@
+npx open-swagger-ui --open ./openapi.json

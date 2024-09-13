@@ -1,0 +1,381 @@
+{
+    "openapi": "3.1.0",
+    "info": {
+        "title": "Activity participation service for UDPT project",
+        "description": "API for UDPT project",
+        "version": "0.1.0"
+    },
+    "paths": {
+        "/api/v1/activity_participations/": {
+            "post": {
+                "tags": [
+                    "Partivity participation v1"
+                ],
+                "summary": "Participate Activity Endpoint",
+                "operationId": "participate_activity_endpoint_api_v1_activity_participations__post",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Activity_ParticipationCreate"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Activity_ParticipationRead"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "get": {
+                "tags": [
+                    "Partivity participation v1"
+                ],
+                "summary": "Get Activity Participations By Activity Id Endpoint",
+                "operationId": "get_activity_participations_by_activity_id_endpoint_api_v1_activity_participations__get",
+                "parameters": [
+                    {
+                        "name": "activity_id",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "title": "Activity Id"
+                        }
+                    },
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 1,
+                            "title": "Page"
+                        }
+                    },
+                    {
+                        "name": "limit",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 10,
+                            "title": "Limit"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "title": "Response Get Activity Participations By Activity Id Endpoint Api V1 Activity Participations  Get"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/activity_participations/me": {
+            "get": {
+                "tags": [
+                    "Partivity participation v1"
+                ],
+                "summary": "Get Activity Participations By Current User Endpoint",
+                "operationId": "get_activity_participations_by_current_user_endpoint_api_v1_activity_participations_me_get",
+                "parameters": [
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 1,
+                            "title": "Page"
+                        }
+                    },
+                    {
+                        "name": "limit",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 10,
+                            "title": "Limit"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "title": "Response Get Activity Participations By Current User Endpoint Api V1 Activity Participations Me Get"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/activity_participations/{activity_participation_id}": {
+            "get": {
+                "tags": [
+                    "Partivity participation v1"
+                ],
+                "summary": "Get Activity Participation By Activity Participation Id Endpoint",
+                "operationId": "get_activity_participation_by_activity_participation_id_endpoint_api_v1_activity_participations__activity_participation_id__get",
+                "parameters": [
+                    {
+                        "name": "activity_participation_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "title": "Activity Participation Id"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Activity_ParticipationRead"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/activity_participations/user/{user_id}": {
+            "get": {
+                "tags": [
+                    "Partivity participation v1"
+                ],
+                "summary": "Get Activity Participations By User Id Endpoint",
+                "operationId": "get_activity_participations_by_user_id_endpoint_api_v1_activity_participations_user__user_id__get",
+                "parameters": [
+                    {
+                        "name": "user_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "title": "User Id"
+                        }
+                    },
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 1,
+                            "title": "Page"
+                        }
+                    },
+                    {
+                        "name": "limit",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 10,
+                            "title": "Limit"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "title": "Response Get Activity Participations By User Id Endpoint Api V1 Activity Participations User  User Id  Get"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "Activity_ParticipationCreate": {
+                "properties": {
+                    "activity_id": {
+                        "type": "integer",
+                        "title": "Activity Id",
+                        "description": "Activity ID"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "activity_id"
+                ],
+                "title": "Activity_ParticipationCreate"
+            },
+            "Activity_ParticipationRead": {
+                "properties": {
+                    "activity_id": {
+                        "type": "integer",
+                        "title": "Activity Id",
+                        "description": "Activity ID"
+                    },
+                    "user_id": {
+                        "type": "integer",
+                        "title": "User Id",
+                        "description": "User ID"
+                    },
+                    "id": {
+                        "type": "integer",
+                        "title": "Id",
+                        "description": "Activity Participation ID"
+                    },
+                    "activity_points": {
+                        "type": "integer",
+                        "title": "Activity Points",
+                        "description": "Activity points"
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "title": "Created At",
+                        "description": "Activity participation created date"
+                    },
+                    "updated_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "title": "Updated At",
+                        "description": "Activity participation modified date"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "activity_id",
+                    "user_id",
+                    "id",
+                    "activity_points",
+                    "created_at",
+                    "updated_at"
+                ],
+                "title": "Activity_ParticipationRead"
+            },
+            "HTTPValidationError": {
+                "properties": {
+                    "detail": {
+                        "items": {
+                            "$ref": "#/components/schemas/ValidationError"
+                        },
+                        "type": "array",
+                        "title": "Detail"
+                    }
+                },
+                "type": "object",
+                "title": "HTTPValidationError"
+            },
+            "ValidationError": {
+                "properties": {
+                    "loc": {
+                        "items": {
+                            "anyOf": [
+                                {
+                                    "type": "string"
+                                },
+                                {
+                                    "type": "integer"
+                                }
+                            ]
+                        },
+                        "type": "array",
+                        "title": "Location"
+                    },
+                    "msg": {
+                        "type": "string",
+                        "title": "Message"
+                    },
+                    "type": {
+                        "type": "string",
+                        "title": "Error Type"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "loc",
+                    "msg",
+                    "type"
+                ],
+                "title": "ValidationError"
+            }
+        }
+    }
+}

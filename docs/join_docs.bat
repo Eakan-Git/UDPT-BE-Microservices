@@ -1,0 +1,1 @@
+redocly join ./auth.json ./users.json ./activity.json ./activity_participations.json ./tickets.json ./points_transfers.json ./timesheet.json ./voucher.json ./voucher_exchange.json ./work_logs.json

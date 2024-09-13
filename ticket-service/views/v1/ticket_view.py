@@ -30,7 +30,7 @@ async def get_my_tickets_endpoint(request: Request, page: int = 1, limit: int = 
 @router.get("/tickets/{ticket_id}", response_model=TicketRead)
 async def get_ticket_by_id_endpoint(ticket_id: int, request: Request):
     ticket = await get_ticket_by_id(ticket_id)
-    if ticket.user_id != request.state.user.get("user_id") or not Role.is_granted(request.state.user.get("role")):
+    if ticket.user_id != request.state.user.get("user_id") and not Role.is_granted(request.state.user.get("role")):
         raise HTTPException(status_code=403, detail="Permission denied")
     return ticket
 
@@ -48,7 +48,9 @@ async def update_ticket_endpoint(ticket_id: int, ticket: TicketUpdate, request: 
         ticket_data["type"] = ticket.type.lower()
     if ticket.status:
         ticket_data["status"] = ticket.status.lower()
-    updated_ticket = await update_ticket(ticket_id, ticket_data, request.state.user.get("user_id"))
+    if not Role.is_granted(request.state.user.get("role")):
+        raise HTTPException(status_code=403, detail="Permission denied")
+    updated_ticket = await update_ticket(ticket_id, ticket_data)
     if updated_ticket is None:
         raise HTTPException(status_code=404, detail="Ticket not found")
     return updated_ticket
