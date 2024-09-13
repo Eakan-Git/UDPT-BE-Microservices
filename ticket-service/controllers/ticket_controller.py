@@ -46,13 +46,12 @@ async def get_tickets_with_filter(page: int, limit: int, ticket_type: Optional[s
     return res
 
 async def create_ticket(ticket_data: dict, user_id: int) -> Ticket:
-    given_user_id = user_id
-    if not isinstance(given_user_id, int) or given_user_id < 1:
+    if not isinstance(user_id, int) or user_id < 1:
         raise HTTPException(status_code=400, detail="Invalid user id")
 
     get_user_rpc_client = GetUserRpcClient()
     await get_user_rpc_client.setup()
-    data = json.dumps({"user_id": given_user_id})
+    data = json.dumps({"user_id": user_id})
     response = await get_user_rpc_client.call(data)
     response = json.loads(response)
     if response.get("error"):
