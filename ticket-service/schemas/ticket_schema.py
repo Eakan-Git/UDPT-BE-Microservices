@@ -7,9 +7,11 @@ class TicketBase(BaseModel):
     from_date: datetime = Field(..., description="Ticket for date")
     to_date: datetime = Field(..., description="Ticket to date")
     
-class TicketCreate(TicketBase):
+class TicketCreate(BaseModel):
     type: Optional[str] = Field(None, description="Ticket type")
     description: Optional[str] = Field(None, description="Ticket description")
+    from_date: datetime = Field(..., description="Ticket for date")
+    to_date: datetime = Field(..., description="Ticket to date")
 
 class TicketRead(TicketBase):
     id: int = Field(..., description="Ticket ID")

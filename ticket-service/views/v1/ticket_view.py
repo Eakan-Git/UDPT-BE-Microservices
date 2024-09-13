@@ -6,10 +6,10 @@ from enums import Role
 router = APIRouter()
 
 @router.post("/tickets/", response_model=TicketRead)
-async def create_ticket_endpoint(ticket: TicketCreate):
+async def create_ticket_endpoint(ticket: TicketCreate, request: Request):
     ticket_data = ticket.dict()
     try:
-        new_ticket = await create_ticket(ticket_data)
+        new_ticket = await create_ticket(ticket_data, request.state.user.get("user_id"))
         return new_ticket
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
