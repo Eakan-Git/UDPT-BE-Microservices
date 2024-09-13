@@ -9,9 +9,9 @@ import json
 
 async def create_voucher_exchange(voucher_exchange_data: dict) -> Voucher_Exchange:    
     get_voucher_rpc_client = GetVoucherRpcClient()
-    await get_voucher_rpc_client.setup()
-    data = json.dumps({"voucher_id": voucher_exchange_data.get("voucher_id")})
     try:
+        await get_voucher_rpc_client.setup()
+        data = json.dumps({"voucher_id": voucher_exchange_data.get("voucher_id")})
         response = await get_voucher_rpc_client.call(data)
     except Exception as e:
         pass
@@ -20,10 +20,9 @@ async def create_voucher_exchange(voucher_exchange_data: dict) -> Voucher_Exchan
     requesting_voucher = json.loads(response)
 
     get_user_rpc_client = GetUserRpcClient()
-    await get_user_rpc_client.setup()
-
-    data = json.dumps({"user_id": voucher_exchange_data.get("user_id")})
     try:
+        await get_user_rpc_client.setup()
+        data = json.dumps({"user_id": voucher_exchange_data.get("user_id")})
         response = await get_user_rpc_client.call(data)
     except Exception as e:
         pass
@@ -50,17 +49,17 @@ async def create_voucher_exchange(voucher_exchange_data: dict) -> Voucher_Exchan
     voucher_exchange = Voucher_Exchange(**voucher_exchange_data)
     await engine.save(voucher_exchange)
     patch_user_rpc_client = PatchUserRpcClient()
-    await patch_user_rpc_client.setup()
 
-    requesting_user_id = requesting_user.get("id")
-    requesting_user_bonus_point = requesting_user.get("bonus_point")
-    patch_data = {
-        "user_id": requesting_user_id,
-        "patch_data": {
-            "bonus_point": requesting_user_bonus_point
-        }
-    }
     try:
+        await patch_user_rpc_client.setup()
+        requesting_user_id = requesting_user.get("id")
+        requesting_user_bonus_point = requesting_user.get("bonus_point")
+        patch_data = {
+            "user_id": requesting_user_id,
+            "patch_data": {
+                "bonus_point": requesting_user_bonus_point
+            }
+        }
         await patch_user_rpc_client.call(json.dumps(patch_data))
     except Exception as e:
         print(e)

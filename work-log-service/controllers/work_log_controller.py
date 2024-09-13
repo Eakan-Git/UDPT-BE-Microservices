@@ -66,9 +66,9 @@ async def get_next_work_log_id() -> int:
 
 async def get_my_work_logs(user_id: int, start_date: datetime, end_date: datetime) -> list:
     get_user_rpc_client = GetUserRpcClient()
-    await get_user_rpc_client.setup()
-    data = json.dumps({"user_id": user_id})
-    try:
+    try:    
+        await get_user_rpc_client.setup()
+        data = json.dumps({"user_id": user_id})
         response = await get_user_rpc_client.call(data)
     except Exception as e:
         pass
@@ -94,9 +94,9 @@ async def get_work_log_by_id(work_log_id: int) -> WorkLog:
 
 async def get_work_logs_by_user_id_and_date_range(user_id: int, start_date: datetime, end_date: datetime) -> list:
     get_user_rpc_client = GetUserRpcClient()
-    await get_user_rpc_client.setup()
-    data = json.dumps({"user_id": user_id})
     try:
+        await get_user_rpc_client.setup()
+        data = json.dumps({"user_id": user_id})
         response = await get_user_rpc_client.call(data)
     except Exception as e:
         pass

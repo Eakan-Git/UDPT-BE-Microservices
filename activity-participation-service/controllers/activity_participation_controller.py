@@ -14,16 +14,21 @@ async def create_activity_participation(activity_participation_data: dict) -> Ac
     activity_participation_data["id"] = activity_participation_id
     
     get_activity_rpc_client = GetActivityRpcClient()
-    await get_activity_rpc_client.setup()
-    call_data = {
-        "activity_id": activity_participation_data.get("activity_id")
-    }
-    requesting_activity = await get_activity_rpc_client.call(json.dumps(call_data))
-    requesting_activity = json.loads(requesting_activity)
-    if requesting_activity.get("error"):
-        return {"error": "Activity not found"}
-    if not time_helper.is_greater_than(time_helper.convert_to_datetime(requesting_activity.get('to_date')), time_helper.get_current_datetime()):
-        return {"error": "Activity has ended"}
+    try:
+        await get_activity_rpc_client.setup()
+        call_data = {
+            "activity_id": activity_participation_data.get("activity_id")
+        }
+        requesting_activity = await get_activity_rpc_client.call(json.dumps(call_data))
+        requesting_activity = json.loads(requesting_activity)
+        if requesting_activity.get("error"):
+            return {"error": "Activity not found"}
+        if not time_helper.is_greater_than(time_helper.convert_to_datetime(requesting_activity.get('to_date')), time_helper.get_current_datetime()):
+            return {"error": "Activity has ended"}
+    except Exception as e:
+        print(f"Error fetching activity data: {e}")
+    finally:
+        await get_activity_rpc_client.close()
     
     activity_participation = Activity_Participation(**activity_participation_data)
     await engine.save(activity_participation)

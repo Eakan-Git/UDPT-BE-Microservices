@@ -50,12 +50,17 @@ async def create_ticket(ticket_data: dict, user_id: int) -> Ticket:
         raise HTTPException(status_code=400, detail="Invalid user id")
 
     get_user_rpc_client = GetUserRpcClient()
-    await get_user_rpc_client.setup()
-    data = json.dumps({"user_id": user_id})
-    response = await get_user_rpc_client.call(data)
-    response = json.loads(response)
-    if response.get("error"):
-        raise HTTPException(status_code=404, detail="User not found")
+    try:
+        await get_user_rpc_client.setup()
+        data = json.dumps({"user_id": user_id})
+        response = await get_user_rpc_client.call(data)
+        response = json.loads(response)
+        if response.get("error"):
+            raise HTTPException(status_code=404, detail="User not found")
+    except Exception as e:
+        print(f"Error fetching user data: {e}")
+    finally:
+        await get_user_rpc_client.close()
     
     given_ticket_type = ticket_data.get("type").lower()
     

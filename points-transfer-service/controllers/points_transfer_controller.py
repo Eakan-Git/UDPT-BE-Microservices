@@ -11,9 +11,8 @@ async def create_points_transfer(points_transfer_data: dict) -> Points_Transfer:
     to_user_id = points_transfer_data["to_user_id"]
 
     get_user_rpc_client = GetUserRpcClient()
-    await get_user_rpc_client.setup()
-
     try:
+        await get_user_rpc_client.setup()
         # Fetching requesting user
         requesting_user_query_response = await get_user_rpc_client.call(json.dumps({"user_id": from_user_id}))
         if "error" in requesting_user_query_response:
@@ -44,9 +43,8 @@ async def create_points_transfer(points_transfer_data: dict) -> Points_Transfer:
     points_transfer = Points_Transfer(**points_transfer_data)
 
     patch_user_rpc_client = PatchUserRpcClient()
-    await patch_user_rpc_client.setup()
-
     try:
+        await patch_user_rpc_client.setup()
         # Update users' bonus points
         patch_sent_user_data = {
             "user_id": requesting_user["id"],

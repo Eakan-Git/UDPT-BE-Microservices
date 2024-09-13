@@ -19,9 +19,10 @@ async def create_points_transfer_endpoint(points_transfer: Points_TransferCreate
     points_transfer_data["from_user_id"] = current_user_id
 
     get_user_rpc_client = GetUserRpcClient()
-    await get_user_rpc_client.setup()
-    current_user_query_data = json.dumps({"user_id": current_user_id})
+
     try:
+        await get_user_rpc_client.setup()
+        current_user_query_data = json.dumps({"user_id": current_user_id})
         current_user_query_response = await get_user_rpc_client.call(current_user_query_data)
     except Exception as e:
         print(str(e))
